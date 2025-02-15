@@ -1,0 +1,22 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+if BOARD_RP2350_LCD
+
+config USB_SELF_POWERED
+	default n
+
+if I2C_DW
+
+config I2C_DW_CLOCK_SPEED
+	default 125
+
+endif # I2C_DW
+
+config PWM
+	default y if DISPLAY
+
+configdefault LV_COLOR_16_SWAP
+	default y if LVGL
+
+endif # BOARD_RP2350_LCD

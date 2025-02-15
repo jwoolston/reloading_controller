@@ -1,0 +1,25 @@
+# Copyright (c) 2025, Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+    GPIO pins exposed on Waveshare RP2350 LCD 1.28 headers.
+
+    The Waveshare RP2350 LCD 1.28 layout provides 2 headers with 2 columns of 10 pins headers. This is the H2 header.
+
+    This binding provides a nexus mapping for the default 16 pins as depicted below:
+    
+        -  GND                 GND             -        
+        -  VSYS                ADC_AVDD        -
+        13 GPIO23/IMU_INT1     BOOT            -
+        12 GPIO22              RUN             -
+        11 GPIO21              GPIO29/BAT_ADC  10        
+        9  GPIO20              GPIO28          8
+        7  GPIO19              GPIO27          6
+        5  GPIO18              GPIO26          4
+        3  GPIO17              GPIO25/LCD_BL   2
+        1  GPIO16              GPIO24/IMU_INT2 0
+    
+
+compatible: "waveshare,rp2350-lcd-h2"
+
+include: [gpio-nexus.yaml, base.yaml]
