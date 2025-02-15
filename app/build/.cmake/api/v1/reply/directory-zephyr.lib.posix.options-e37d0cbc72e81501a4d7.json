@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/lib/posix/options",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/lib/posix/options"
+	}
+}

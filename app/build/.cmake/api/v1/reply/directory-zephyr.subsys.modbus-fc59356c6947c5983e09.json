@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/subsys/modbus",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/subsys/modbus"
+	}
+}

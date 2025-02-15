@@ -1,0 +1,37 @@
+# Available runners configured by board.cmake.
+runners:
+- openocd
+- uf2
+
+# Default flash runner if --runner is not given.
+flash-runner: openocd
+
+# Default debug runner if --runner is not given.
+debug-runner: openocd
+
+# Common runner configuration values.
+config:
+  board_dir: C:/zephyr_development/reloading_controller/controller/boards/waveshare/rp2350_lcd
+  # Build outputs:
+  elf_file: zephyr.elf
+  hex_file: zephyr.hex
+  bin_file: zephyr.bin
+  uf2_file: zephyr.uf2
+  # Host tools:
+  gdb: C:/Users/Jared Woolston/zephyr-sdk-0.17.0/arm-zephyr-eabi/bin/arm-zephyr-eabi-gdb.exe
+
+# Runner specific arguments
+args:
+  openocd:
+    - --cmd-load
+    - flash write_image erase
+    - --cmd-verify
+    - verify_image
+    - --cmd-pre-init
+    - source [find interface/cmsis-dap.cfg]
+    - --cmd-pre-init
+    - source [find target/rp2350.cfg]
+    - --cmd-pre-init
+    - set_adapter_speed_if_not_set 5000
+  uf2:
+    - --board-id=RP2350

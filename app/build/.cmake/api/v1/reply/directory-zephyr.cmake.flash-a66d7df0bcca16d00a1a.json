@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/cmake/flash",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/cmake/flash"
+	}
+}

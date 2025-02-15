@@ -1,0 +1,2 @@
+# Load board Kconfig descriptions.
+osource "C:/zephyr_development/reloading_controller/controller/boards/waveshare/rp2350_lcd/Kconfig.rp2350_lcd"

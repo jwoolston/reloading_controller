@@ -1,0 +1,26 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+identifier: rp2350_lcd/rp2350a/m33
+name: Waveshare RP2350 LCD 1.28in
+type: mcu
+arch: arm
+flash: 4096
+ram: 520
+toolchain:
+  - zephyr
+  - gnuarmemb
+supported:
+  - adc
+  - uart
+  - gpio
+  - i2c
+  - spi
+  - hwinfo
+  - watchdog
+  - pwm
+  - flash
+  - dma
+  - counter
+  - clock
+  - usbd

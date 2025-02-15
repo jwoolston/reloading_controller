@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/arch/arch/arm",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/arch/arm"
+	}
+}

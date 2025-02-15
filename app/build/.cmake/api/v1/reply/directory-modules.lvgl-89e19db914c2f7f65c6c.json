@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "modules/lvgl",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/modules/lvgl"
+	}
+}

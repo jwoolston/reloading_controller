@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/subsys/debug",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/subsys/debug"
+	}
+}

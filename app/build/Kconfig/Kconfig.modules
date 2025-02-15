@@ -1,0 +1,24 @@
+menu "controller (C:/zephyr_development/reloading_controller/controller)"
+osource "C:/zephyr_development/reloading_controller/controller/Kconfig"
+config ZEPHYR_CONTROLLER_MODULE
+	bool
+	default y
+endmenu
+menu "cmsis (C:/zephyr_development/reloading_controller/modules/hal/cmsis)"
+osource "$(ZEPHYR_CMSIS_KCONFIG)"
+config ZEPHYR_CMSIS_MODULE
+	bool
+	default y
+endmenu
+menu "hal_rpi_pico (C:/zephyr_development/reloading_controller/modules/hal/rpi_pico)"
+osource "$(ZEPHYR_HAL_RPI_PICO_KCONFIG)"
+config ZEPHYR_HAL_RPI_PICO_MODULE
+	bool
+	default y
+endmenu
+menu "lvgl (C:/zephyr_development/reloading_controller/modules/lib/gui/lvgl)"
+osource "C:/zephyr_development/reloading_controller/modules/lib/gui/lvgl/zephyr/Kconfig"
+config ZEPHYR_LVGL_MODULE
+	bool
+	default y
+endmenu

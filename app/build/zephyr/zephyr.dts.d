@@ -1,0 +1,32 @@
+empty_file.o: \
+ C:/zephyr_development/reloading_controller/zephyr/misc/empty_file.c \
+ C:/zephyr_development/reloading_controller/controller/boards/waveshare/rp2350_lcd/rp2350_lcd_rp2350a_m33.dts \
+ C:/zephyr_development/reloading_controller/zephyr/dts/arm/raspberrypi/rpi_pico/rp2350a.dtsi \
+ C:/zephyr_development/reloading_controller/zephyr/dts/arm/raspberrypi/rpi_pico/rp2350.dtsi \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/adc/adc.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/dt-util.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_macro.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_internal.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_loops.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_listify.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_internal_is_eq.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_internal_util_inc.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_internal_util_dec.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/sys/util_internal_util_x2.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/gpio/gpio.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/clock/rpi_pico_rp2350_clock.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/clock/rpi_pico_clock_common.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/i2c/i2c.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/regulator/rpi_pico.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/reset/rp2350_reset.h \
+ C:/zephyr_development/reloading_controller/zephyr/dts/common/mem.h \
+ C:/zephyr_development/reloading_controller/zephyr/dts/arm/raspberrypi/rpi_pico/m33.dtsi \
+ C:/zephyr_development/reloading_controller/zephyr/dts/arm/armv8-m.dtsi \
+ C:/zephyr_development/reloading_controller/zephyr/dts/common/skeleton.dtsi \
+ C:/zephyr_development/reloading_controller/controller/boards/waveshare/rp2350_lcd/rp2350_lcd.dtsi \
+ C:/zephyr_development/reloading_controller/zephyr/dts/common/freq.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/pwm/pwm.h \
+ C:/zephyr_development/reloading_controller/controller/boards/waveshare/rp2350_lcd/rp2350_lcd-pinctrl.dtsi \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/pinctrl/rpi-pico-rp2350a-pinctrl.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/pinctrl/rpi-pico-rp2350-pinctrl-common.h \
+ C:/zephyr_development/reloading_controller/zephyr/include/zephyr/dt-bindings/pinctrl/rpi-pico-pinctrl-common.h

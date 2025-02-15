@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/kernel",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/kernel"
+	}
+}

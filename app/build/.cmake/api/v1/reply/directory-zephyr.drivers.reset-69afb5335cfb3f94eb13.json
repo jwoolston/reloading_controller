@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/drivers/reset",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/drivers/reset"
+	}
+}

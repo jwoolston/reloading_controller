@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "modules/controller/drivers/sensor",
+		"source" : "C:/zephyr_development/reloading_controller/controller/drivers/sensor"
+	}
+}

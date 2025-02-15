@@ -1,0 +1,4 @@
+"controller":"C:/zephyr_development/reloading_controller/controller":"C:/zephyr_development/reloading_controller/controller"
+"cmsis":"C:/zephyr_development/reloading_controller/modules/hal/cmsis":"${ZEPHYR_CMSIS_CMAKE_DIR}"
+"hal_rpi_pico":"C:/zephyr_development/reloading_controller/modules/hal/rpi_pico":"${ZEPHYR_HAL_RPI_PICO_CMAKE_DIR}"
+"lvgl":"C:/zephyr_development/reloading_controller/modules/lib/gui/lvgl":"${ZEPHYR_LVGL_CMAKE_DIR}"

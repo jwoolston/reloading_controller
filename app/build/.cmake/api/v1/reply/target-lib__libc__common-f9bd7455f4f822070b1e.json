@@ -1,0 +1,579 @@
+{
+	"archive" : {},
+	"artifacts" : 
+	[
+		{
+			"path" : "zephyr/lib/libc/common/liblib__libc__common.a"
+		}
+	],
+	"backtrace" : 3,
+	"backtraceGraph" : 
+	{
+		"commands" : 
+		[
+			"add_library",
+			"zephyr_library_named",
+			"zephyr_library",
+			"add_dependencies",
+			"add_compile_options",
+			"target_link_libraries",
+			"zephyr_library_compile_options",
+			"target_sources",
+			"zephyr_library_sources",
+			"zephyr_library_sources_ifdef"
+		],
+		"files" : 
+		[
+			"C:/zephyr_development/reloading_controller/zephyr/cmake/modules/extensions.cmake",
+			"C:/zephyr_development/reloading_controller/zephyr/lib/libc/common/CMakeLists.txt",
+			"C:/zephyr_development/reloading_controller/zephyr/CMakeLists.txt",
+			"C:/zephyr_development/reloading_controller/zephyr/lib/CMakeLists.txt"
+		],
+		"nodes" : 
+		[
+			{
+				"file" : 1
+			},
+			{
+				"command" : 2,
+				"file" : 1,
+				"line" : 5,
+				"parent" : 0
+			},
+			{
+				"command" : 1,
+				"file" : 0,
+				"line" : 432,
+				"parent" : 1
+			},
+			{
+				"command" : 0,
+				"file" : 0,
+				"line" : 458,
+				"parent" : 2
+			},
+			{
+				"file" : 2
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 964,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 636,
+				"parent" : 4
+			},
+			{
+				"command" : 3,
+				"file" : 2,
+				"line" : 1023,
+				"parent" : 4
+			},
+			{
+				"file" : 3
+			},
+			{
+				"command" : 4,
+				"file" : 3,
+				"line" : 4,
+				"parent" : 8
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 462,
+				"parent" : 2
+			},
+			{
+				"command" : 6,
+				"file" : 1,
+				"line" : 25,
+				"parent" : 0
+			},
+			{
+				"command" : 5,
+				"file" : 0,
+				"line" : 551,
+				"parent" : 11
+			},
+			{
+				"command" : 9,
+				"file" : 1,
+				"line" : 7,
+				"parent" : 0
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 2043,
+				"parent" : 13
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 515,
+				"parent" : 14
+			},
+			{
+				"command" : 9,
+				"file" : 1,
+				"line" : 13,
+				"parent" : 0
+			},
+			{
+				"command" : 8,
+				"file" : 0,
+				"line" : 2043,
+				"parent" : 16
+			},
+			{
+				"command" : 7,
+				"file" : 0,
+				"line" : 515,
+				"parent" : 17
+			}
+		]
+	},
+	"compileGroups" : 
+	[
+		{
+			"compileCommandFragments" : 
+			[
+				{
+					"fragment" : "-fdiagnostics-color=always"
+				},
+				{
+					"backtrace" : 9,
+					"fragment" : "-Wshadow"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-strict-aliasing"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Os"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-imacros"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "C:/zephyr_development/reloading_controller/controller/app/build/zephyr/include/generated/zephyr/autoconf.h"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-printf-return-value"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-common"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-g"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-gdwarf-4"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fdiagnostics-color=always"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-mcpu=cortex-m33+nodsp"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-mthumb"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-mabi=aapcs"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-mfp16-format=ieee"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-mtp=soft"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "\"--sysroot=C:/Users/Jared Woolston/zephyr-sdk-0.17.0/arm-zephyr-eabi/arm-zephyr-eabi\""
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-imacros"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "C:/zephyr_development/reloading_controller/zephyr/include/zephyr/toolchain/zephyr_stdint.h"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wall"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wformat"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wformat-security"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wno-format-zero-length"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wdouble-promotion"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wno-pointer-sign"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wpointer-arith"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wexpansion-to-defined"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Wno-unused-but-set-variable"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-Werror=implicit-int"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-pic"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-pie"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-asynchronous-unwind-tables"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-ftls-model=local-exec"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-reorder-functions"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "--param=min-pagesize=0"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fno-defer-pop"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fmacro-prefix-map=C:/zephyr_development/reloading_controller/controller/app=CMAKE_SOURCE_DIR"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fmacro-prefix-map=C:/zephyr_development/reloading_controller/zephyr=ZEPHYR_BASE"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fmacro-prefix-map=C:/zephyr_development/reloading_controller=WEST_TOPDIR"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-ffunction-sections"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-fdata-sections"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-specs=picolibc.specs"
+				},
+				{
+					"backtrace" : 10,
+					"fragment" : "-std=c99"
+				},
+				{
+					"backtrace" : 12,
+					"fragment" : "-fno-builtin-malloc"
+				}
+			],
+			"defines" : 
+			[
+				{
+					"backtrace" : 10,
+					"define" : "KERNEL"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "K_HEAP_MEM_POOL_SIZE=0"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "PICOLIBC_LONG_LONG_PRINTF_SCANF"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "PICO_RP2350"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "__LINUX_ERRNO_EXTENSIONS__"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "__PROGRAM_START"
+				},
+				{
+					"backtrace" : 10,
+					"define" : "__ZEPHYR__=1"
+				}
+			],
+			"includes" : 
+			[
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/controller/app/build/zephyr/include/generated/zephyr"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/controller/app/build/zephyr/include/generated"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/soc/raspberrypi/rpi_pico"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/soc/raspberrypi/rpi_pico/common/."
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/soc/raspberrypi/rpi_pico/rp2350/."
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/controller/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/cmsis/CMSIS/Core/Include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/modules/cmsis/."
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/common/pico_base_headers/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/boot_bootrom_headers/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_base/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_clocks/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_watchdog/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_xosc/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_pll/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_irq/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_sync/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_timer/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_resets/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_boot_lock/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_ticks/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_sync_spin_lock/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_bootrom/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_flash/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_platform_compiler/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_platform_sections/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_platform_panic/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/common/boot_picoboot_headers/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/common/boot_picobin_headers/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2350/hardware_regs/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2350/hardware_structs/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2350/pico_platform/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/modules/hal_rpi_pico"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/hardware_gpio/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_runtime/include"
+				},
+				{
+					"backtrace" : 10,
+					"path" : "C:/zephyr_development/reloading_controller/modules/hal/rpi_pico/src/rp2_common/pico_runtime_init/include"
+				},
+				{
+					"backtrace" : 10,
+					"isSystem" : true,
+					"path" : "C:/zephyr_development/reloading_controller/zephyr/lib/libc/common/include"
+				}
+			],
+			"language" : "C",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"dependencies" : 
+	[
+		{
+			"backtrace" : 5,
+			"id" : "kobj_types_h_target::@d36e55b69c1b90fb26b2"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "syscall_list_h_target::@d36e55b69c1b90fb26b2"
+		},
+		{
+			"backtrace" : 6,
+			"id" : "app_version_h::@d36e55b69c1b90fb26b2"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "driver_validation_h_target::@d36e55b69c1b90fb26b2"
+		},
+		{
+			"backtrace" : 7,
+			"id" : "zephyr_generated_headers::@d36e55b69c1b90fb26b2"
+		},
+		{
+			"backtrace" : 5,
+			"id" : "device_api_ld_target::@d36e55b69c1b90fb26b2"
+		}
+	],
+	"id" : "lib__libc__common::@4887e96c8898694998ea",
+	"name" : "lib__libc__common",
+	"nameOnDisk" : "liblib__libc__common.a",
+	"paths" : 
+	{
+		"build" : "zephyr/lib/libc/common",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/lib/libc/common"
+	},
+	"sourceGroups" : 
+	[
+		{
+			"name" : "Source Files",
+			"sourceIndexes" : 
+			[
+				0,
+				1
+			]
+		}
+	],
+	"sources" : 
+	[
+		{
+			"backtrace" : 15,
+			"compileGroupIndex" : 0,
+			"path" : "C:/zephyr_development/reloading_controller/zephyr/lib/libc/common/source/stdlib/abort.c",
+			"sourceGroupIndex" : 0
+		},
+		{
+			"backtrace" : 18,
+			"compileGroupIndex" : 0,
+			"path" : "C:/zephyr_development/reloading_controller/zephyr/lib/libc/common/source/stdlib/malloc.c",
+			"sourceGroupIndex" : 0
+		}
+	],
+	"type" : "STATIC_LIBRARY"
+}

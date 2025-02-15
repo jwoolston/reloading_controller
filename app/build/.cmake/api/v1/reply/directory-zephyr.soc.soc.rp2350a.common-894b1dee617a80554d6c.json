@@ -1,0 +1,14 @@
+{
+	"backtraceGraph" : 
+	{
+		"commands" : [],
+		"files" : [],
+		"nodes" : []
+	},
+	"installers" : [],
+	"paths" : 
+	{
+		"build" : "zephyr/soc/soc/rp2350a/common",
+		"source" : "C:/zephyr_development/reloading_controller/zephyr/soc/raspberrypi/rpi_pico/common"
+	}
+}
