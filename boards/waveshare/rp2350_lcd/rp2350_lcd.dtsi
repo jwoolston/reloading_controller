@@ -57,7 +57,7 @@
 	/*lvgl_pointer {
 		compatible = "zephyr,lvgl-pointer-input";
 		input = <&cst816s>;
-	};
+	};*/
 
 	/* MIPI DBI */
 	mipi_dbi {

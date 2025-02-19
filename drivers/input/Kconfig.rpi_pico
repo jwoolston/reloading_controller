@@ -1,0 +1,11 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+config INPUT_RPI_PICO_PIO_QDEC
+	bool "Raspberry Pi PIO Quadrature Encoder Input driver"
+	default y
+	depends on DT_HAS_RASPBERRYPI_PICO_QDEC_PIO_ENABLED
+	select PICOSDK_USE_PIO
+	select PICOSDK_USE_CLAIM
+	select PINCTRL
+	depends on RESET

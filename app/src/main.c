@@ -38,6 +38,8 @@ static const struct adc_dt_spec adc_channels[] = {
                          DT_SPEC_AND_COMMA)
 };
 
+const struct device *qdec0 = DEVICE_DT_GET(DT_NODELABEL(pio1_qdec));
+
 int main(void) {
     uint32_t pulse_width;
     uint32_t step;

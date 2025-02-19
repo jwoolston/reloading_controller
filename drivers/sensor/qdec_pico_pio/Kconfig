@@ -1,0 +1,12 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+#
+
+config QDEC_PICO_PIO
+	bool "RP2040/RP2350 PICO QDEC driver"
+	default y
+	depends on DT_HAS_RASPBERRYPI_PICO_QDEC_ENABLED
+	select PINCTRL
+	select DMA
+	help
+	  STM32 family Quadrature Decoder driver.

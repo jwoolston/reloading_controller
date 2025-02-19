@@ -1,46 +1,33 @@
-/*&pinctrl {
-	pio1_uart0_default: pio1_uart0_default {
-		rx_pins {
-			pinmux = <PIO1_P1>;
+/ {
+	lvgl_encoder {
+		compatible = "zephyr,lvgl-encoder-input";
+		rotation-input-code = <INPUT_REL_Y>;
+		button-input-code = <INPUT_KEY_0>;
+	};
+};
+
+&pinctrl {
+	pio1_qdec_default: pio1_qdec_default {
+		clk_pin {
+			pinmux = <PIO1_P13>;
 			input-enable;
 			bias-pull-up;
 		};
-		tx_pins {
-			pinmux = <PIO1_P0>;
-		};
-	};
-
-	pio1_uart1_default: pio1_uart1_default {
-		rx_pins {
-			pinmux = <PIO1_P2>;
+		dt_pin {
+			pinmux = <PIO1_P14>;
 			input-enable;
 			bias-pull-up;
 		};
-		tx_pins {
-			pinmux = <PIO1_P3>;
-		};
 	};
-};*/
+};
 
+&pio1 {
+	status = "okay";
 
-/*&pio1 {
- 	status = "disabled";
-
-	pio1_uart0: uart0 {
-		pinctrl-0 = <&pio1_uart0_default>;
-		pinctrl-names = "default";
-
-		compatible = "raspberrypi,pico-uart-pio";
-		current-speed = <115200>;
+	pio1_qdec: qdec0 {
 		status = "okay";
+		compatible = "raspberrypi,pico-qdec-pio";
+		pinctrl-0 = <&pio1_qdec_default>;
+		zephyr,axis = <INPUT_REL_WHEEL>;
 	};
-
-	pio1_uart1: uart1 {
-		pinctrl-0 = <&pio1_uart1_default>;
-		pinctrl-names = "default";
-
-		compatible = "raspberrypi,pico-uart-pio";
-		current-speed = <115200>;
-		status = "okay";
-	};
-};*/
+};

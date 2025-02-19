@@ -1,0 +1,43 @@
+# Copyright 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  Raspberry Pi Pico PIO Quadrature Encoder Input Device
+
+  Implement an input device generating relative axis event reports for a rotary
+  encoder connected to two GPIOs via a PIO.
+
+  Example configuration:
+
+  #include <zephyr/dt-bindings/input/input-event-codes.h>
+
+  qdec {
+          compatible = "raspberrypi,pico-qdec-pio";
+          gpios = <&gpio0 14 (GPIO_PULL_UP | GPIO_ACTIVE_HIGH)>,
+                  <&gpio0 13 (GPIO_PULL_UP | GPIO_ACTIVE_HIGH)>;
+          steps-per-period = <4>;
+          zephyr,axis = <INPUT_REL_WHEEL>;
+          max-update-freq = <2000>;
+  };
+
+compatible: "raspberrypi,pico-qdec-pio"
+
+include: [base.yaml, "raspberrypi,pico-pio-device.yaml"]
+
+properties:
+
+  zephyr,axis:
+    type: int
+    required: true
+    description: |
+      The input code for the axis to report for the device, typically any of
+      INPUT_REL_*.
+
+  max-update-freq:
+    type: int
+    required: false
+    description: |
+      Specifies the maximum encoder update frequency. This can be used to 
+      lower the clock of the state machine to save power if the application 
+      doesn't require a very high sampling rate. Passing zero or omitting
+      will set the clock to the maximum (12.5 Msps).
