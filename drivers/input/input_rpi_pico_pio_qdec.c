@@ -49,6 +49,15 @@ struct pio_qdec_data {
 #endif
 };
 
+/*
+ The following PIO program is the unmodified output of picoasm from the
+ pico-sdk PIO Quadrature Encoder sample. Its original copyright notice
+ is produced below.
+
+ Copyright (c) 2023 Raspberry Pi (Trading) Ltd.
+
+ SPDX-License-Identifier: BSD-3-Clause
+ */
 RPI_PICO_PIO_DEFINE_PROGRAM(qdec, 15, 23,
     0x000f, //  0: jmp    15
     0x000e, //  1: jmp    14
@@ -154,14 +163,14 @@ static int pio_qdec_init(const struct device *dev)
             .pcfg = PINCTRL_DT_INST_DEV_CONFIG_GET(idx),				\
             .clk_pin = DT_INST_RPI_PICO_PIO_PIN_BY_NAME(idx, default, 0, clk_pin, 0),	\
             .dt_pin = DT_INST_RPI_PICO_PIO_PIN_BY_NAME(idx, default, 0, dt_pin, 0),	\
-            .max_step_rate = DT_INST_PROP_OR(idx, max_step_rate, 0),				\
+            .max_step_rate = DT_INST_PROP_OR(idx, max_step_rate, 0),			\
             .axis = DT_INST_PROP(idx, zephyr_axis),			        	\
         };										\
         static struct pio_qdec_data pio_qdec##idx##_data;				\
                                                                                         \
-        DEVICE_DT_INST_DEFINE(idx, pio_qdec_init, NULL, &pio_qdec##idx##_data,		\
-                              &pio_qdec##idx##_config, POST_KERNEL,			\
-                              CONFIG_SERIAL_INIT_PRIORITY,				\
-                              &pio_qdec_driver_api);
+        DEVICE_DT_INST_DEFINE(idx, pio_qdec_init, PM_DEVICE_DT_INST_GET(idx),	        \
+                              &pio_qdec##idx##_data, &pio_qdec##idx##_config,		\
+                              POST_KERNEL, CONFIG_INPUT_INIT_PRIORITY,		        \
+                              NULL);
 
-//DT_INST_FOREACH_STATUS_OKAY(QDEC_PIO_INIT)
+DT_INST_FOREACH_STATUS_OKAY(QDEC_PIO_INIT)

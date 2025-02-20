@@ -28,6 +28,7 @@
 		status = "okay";
 		compatible = "raspberrypi,pico-qdec-pio";
 		pinctrl-0 = <&pio1_qdec_default>;
+		pinctrl-names = "default";
 		zephyr,axis = <INPUT_REL_WHEEL>;
 	};
 };
