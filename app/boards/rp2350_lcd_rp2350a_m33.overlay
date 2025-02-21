@@ -1,7 +1,10 @@
+#include <zephyr/dt-bindings/dma/rpi-pico-dma-rp2350.h>
+#include <zephyr/dt-bindings/pinctrl/rpi-pico-rp2350a-pinctrl.h>
+
 / {
 	lvgl_encoder {
 		compatible = "zephyr,lvgl-encoder-input";
-		rotation-input-code = <INPUT_REL_Y>;
+		rotation-input-code = <INPUT_REL_WHEEL>;
 		button-input-code = <INPUT_KEY_0>;
 	};
 };
@@ -11,12 +14,12 @@
 		clk_pin {
 			pinmux = <PIO1_P13>;
 			input-enable;
-			bias-pull-up;
+			bias-pull-down;
 		};
 		dt_pin {
 			pinmux = <PIO1_P14>;
 			input-enable;
-			bias-pull-up;
+			bias-pull-down;
 		};
 	};
 };
@@ -29,6 +32,16 @@
 		compatible = "raspberrypi,pico-qdec-pio";
 		pinctrl-0 = <&pio1_qdec_default>;
 		pinctrl-names = "default";
+		gpios = <&gpio0 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 		zephyr,axis = <INPUT_REL_WHEEL>;
+		zephyr,key = <INPUT_KEY_0>;
+		dmas = <&dma 0 RPI_PICO_DMA_SLOT_PIO1_RX0 0>;
+		dma-names = "qdec";
+		max-update-freq = <2000>;
 	};
 };
+
+&dma {
+	status = "okay";
+};
+
