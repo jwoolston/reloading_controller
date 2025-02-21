@@ -6,17 +6,88 @@
 
 /dts-v1/;
 
-/* The build system assumes that there's a cpucluster-specific file.
- *
- * This file provides composition of the device tree:
- * 1. The common features of the SoC
- * 2. Core-specific configuration.
- * 3. Board-specific configuration.
- */
-#include <raspberrypi/rpi_pico/rp2350a.dtsi>
-#include <raspberrypi/rpi_pico/m33.dtsi>
+#include "../common/rp2350_lcd_common.dtsi"
 
-/* there's nothing specific to the Cortex-M33 cores vs the (not yet
- * implemented) Hazard3 cores.
- */
-#include "rp2350_lcd.dtsi"
+/ {
+	model = "Waveshare RP2350 LCD-1.28";
+	compatible = "waveshare,rp2350_lcd";
+
+	h1: h1 {
+		compatible = "waveshare,rp2350-lcd-h1";
+		#gpio-cells = <2>;
+		gpio-map-mask = <0xffffffff 0xffffffc0>;
+		gpio-map-pass-thru = <0 0x3f>;
+		gpio-map = <0 0 &gpio0 8 0>,	/* GP8 */
+				   <1 0 &gpio0 0 0>,	/* GP0 */
+				   <2 0 &gpio0 9 0>,	/* GP9 */
+				   <3 0 &gpio0 1 0>,	/* GP1 */
+				   <4 0 &gpio0 10 0>,	/* GP10 */
+				   <5 0 &gpio0 2 0>,	/* GP2 */
+				   <6 0 &gpio0 11 0>,	/* GP11 */
+				   <7 0 &gpio0 3 0>,	/* GP3 */
+				   <8 0 &gpio0 12 0>,	/* GP12 */
+				   <9 0 &gpio0 4 0>,	/* GP4 */
+				   <10 0 &gpio0 13 0>,	/* GP13 */
+				   <11 0 &gpio0 5 0>,	/* GP5 */
+				   <12 0 &gpio0 14 0>,	/* GP14 */
+				   <13 0 &gpio0 6 0>,	/* GP6 */
+				   <14 0 &gpio0 15 0>,	/* GP15 */
+				   <15 0 &gpio0 7 0>;	/* GP7 */
+	};
+
+	h2: h2 {
+		compatible = "waveshare,rp2350-lcd-h2";
+		#gpio-cells = <2>;
+		gpio-map-mask = <0xffffffff 0xffffffc0>;
+		gpio-map-pass-thru = <0 0x3f>;
+		gpio-map = <0 0 &gpio0 8 0>,	/* GP8 */
+				   <1 0 &gpio0 0 0>,	/* GP0 */
+				   <2 0 &gpio0 9 0>,	/* GP9 */
+				   <3 0 &gpio0 1 0>,	/* GP1 */
+				   <4 0 &gpio0 10 0>,	/* GP10 */
+				   <5 0 &gpio0 2 0>,	/* GP2 */
+				   <6 0 &gpio0 11 0>,	/* GP11 */
+				   <7 0 &gpio0 3 0>,	/* GP3 */
+				   <8 0 &gpio0 12 0>,	/* GP12 */
+				   <9 0 &gpio0 4 0>,	/* GP4 */
+				   <10 0 &gpio0 13 0>,	/* GP13 */
+				   <11 0 &gpio0 5 0>,	/* GP5 */
+				   <12 0 &gpio0 14 0>,	/* GP14 */
+				   <13 0 &gpio0 6 0>,	/* GP6 */
+				   <14 0 &gpio0 15 0>,	/* GP15 */
+				   <15 0 &gpio0 7 0>;	/* GP7 */
+	};
+
+};
+
+&flash0 {
+	reg = <0x10000000 DT_SIZE_M(4)>;
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Reserved memory for an image definition block. The block is much
+		 * smaller than 256 bytes, but in practice the linker places the vector
+		 * table at a much larger alignment offset.
+		 */
+		image_def: partition@0 {
+			label = "image_def";
+			reg = <0x00000000 0x100>;
+			read-only;
+		};
+
+		/*
+		 * Usable flash. Starts at 0x100, after the image definition block.
+		 * The partition size is 4MB minus the 0x100 bytes taken by the
+		 * image definition.
+		 */
+		code_partition: partition@100 {
+			label = "code-partition";
+			reg = <0x100 (DT_SIZE_M(4) - 0x100)>;
+			read-only;
+		};
+	};
+};
+

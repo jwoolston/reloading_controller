@@ -293,7 +293,7 @@ static int pio_qdec_init(const struct device *dev)
             .pcfg = PINCTRL_DT_INST_DEV_CONFIG_GET(idx),				\
             .clk_pin = DT_INST_RPI_PICO_PIO_PIN_BY_NAME(idx, default, 0, clk_pin, 0),	\
             .dt_pin = DT_INST_RPI_PICO_PIO_PIN_BY_NAME(idx, default, 0, dt_pin, 0),	\
-            .btn_pin = GPIO_DT_SPEC_INST_GET(idx, gpios),                               \
+            .btn_pin = GPIO_DT_SPEC_INST_GET(idx, btn_gpios),                           \
             .max_step_rate = DT_INST_PROP_OR(idx, max_step_rate, 0),			\
             .axis = DT_INST_PROP(idx, zephyr_axis),			        	\
             .button = DT_INST_PROP(idx, zephyr_key),			        	\

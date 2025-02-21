@@ -1,0 +1,79 @@
+/*
+ * Copyright (c) 2025 Jared Woolston
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ */
+
+/dts-v1/;
+
+#include "../common/rp2350_lcd_common.dtsi"
+
+/ {
+	model = "Waveshare RP2350 LCD-1.28 Touch";
+	compatible = "waveshare,rp2350_lcd_touch";
+
+	chosen {
+		zephyr,touch = &cst816s;
+	};
+
+	/* Touch Controller */
+	lvgl_pointer {
+		compatible = "zephyr,lvgl-pointer-input";
+		input = <&cst816s>;
+	};
+
+	h1: h1 {
+		compatible = "waveshare,rp2350-lcd-touch-h1";
+		#gpio-cells = <2>;
+		gpio-map-mask = <0xffffffff 0xffffffc0>;
+		gpio-map-pass-thru = <0 0x3f>;
+		gpio-map = <0 0 &gpio0 16 0>,	/* GP16 */
+				   <1 0 &gpio0 17 0>,	/* GP17 */
+				   <2 0 &gpio0 18 0>,	/* GP18 */
+				   <3 0 &gpio0 26 0>,	/* GP26 */
+				   <4 0 &gpio0 27 0>,	/* GP27 */
+				   <5 0 &gpio0 28 0>;	/* GP28 */
+	};
+};
+
+&flash0 {
+	reg = <0x10000000 DT_SIZE_M(4)>;
+
+	partitions {
+		compatible = "fixed-partitions";
+		#address-cells = <1>;
+		#size-cells = <1>;
+
+		/* Reserved memory for an image definition block. The block is much
+		 * smaller than 256 bytes, but in practice the linker places the vector
+		 * table at a much larger alignment offset.
+		 */
+		image_def: partition@0 {
+			label = "image_def";
+			reg = <0x00000000 0x100>;
+			read-only;
+		};
+
+		/*
+		 * Usable flash. Starts at 0x100, after the image definition block.
+		 * The partition size is 16MB minus the 0x100 bytes taken by the
+		 * image definition.
+		 */
+		code_partition: partition@100 {
+			label = "code-partition";
+			reg = <0x100 (DT_SIZE_M(16) - 0x100)>;
+			read-only;
+		};
+	};
+};
+
+&i2c1 {
+	/* Hynitron CST816S Capacitive Touch Controller */
+	cst816s: cst816s@15 {
+		status = "okay";
+		compatible = "hynitron,cst816s";
+		reg = <0x15>;
+		irq-gpios = <&gpio0 5 (GPIO_PULL_UP | GPIO_ACTIVE_LOW)>;
+		rst-gpios = <&gpio0 13 GPIO_ACTIVE_LOW>;
+	};
+};

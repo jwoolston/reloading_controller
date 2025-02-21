@@ -1,0 +1,27 @@
+# Copyright (c) 2025, Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+    GPIO pins exposed on Waveshare RP2350 LCD 1.28 Touch header.
+
+    The Waveshare RP2350 LCD 1.28 Touch layout provides 1 header with 1 row of 12 pins. This is the H1 header.
+
+    This binding provides a nexus mapping for the default 12 pins as depicted below:
+    
+        -  GND         
+        -  VSYS 
+        -  RUN     
+        -  BOOT 
+        -  GND
+        - ADC_AVDD            
+        1 GPIO16           
+        2 GPIO17           
+        3  GPIO18         
+        4  GPIO26          
+        5  GPIO27
+        6  GPIO28
+    
+
+compatible: "waveshare,rp2350-lcd-touch-h1"
+
+include: [gpio-nexus.yaml, base.yaml]

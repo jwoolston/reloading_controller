@@ -1,0 +1,9 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+board:
+  name: rp2350_lcd_touch
+  full_name: RP2350 LCD 1.28in Touch Screen
+  vendor: waveshare
+  socs:
+    - name: rp2350a

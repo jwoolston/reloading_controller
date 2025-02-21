@@ -32,7 +32,7 @@
 		compatible = "raspberrypi,pico-qdec-pio";
 		pinctrl-0 = <&pio1_qdec_default>;
 		pinctrl-names = "default";
-		gpios = <&gpio0 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		btn-gpios = <&gpio0 15 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 		zephyr,axis = <INPUT_REL_WHEEL>;
 		zephyr,key = <INPUT_KEY_0>;
 		dmas = <&dma 0 RPI_PICO_DMA_SLOT_PIO1_RX0 0>;
