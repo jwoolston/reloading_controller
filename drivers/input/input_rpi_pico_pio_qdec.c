@@ -10,22 +10,20 @@
 
 #include <zephyr/device.h>
 #include <zephyr/drivers/dma.h>
+#include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/misc/pio_rpi_pico/pio_rpi_pico.h>
 #include <zephyr/drivers/pinctrl.h>
 #include <zephyr/input/input.h>
 #include <zephyr/kernel.h>
+#include <zephyr/logging/log.h>
 #include <zephyr/pm/device.h>
-#include <zephyr/sys/atomic.h>
 #include <zephyr/sys/util.h>
 
-#include <zephyr/drivers/misc/pio_rpi_pico/pio_rpi_pico.h>
 
 #include <hardware/dma.h>
 #include <hardware/pio.h>
 #include <hardware/clocks.h>
 
-#include <zephyr/logging/log.h>
-
-#include "zephyr/drivers/gpio.h"
 LOG_MODULE_REGISTER(raspberrypi_pico_qdec_pio, CONFIG_INPUT_LOG_LEVEL);
 
 #define DMA_MAX_TRANSFER_COUNT 0xFFFFFFFF
@@ -162,7 +160,7 @@ static void dma_user_callback(const struct device *dev, void *user_data,
     }
 }
 
-void button_pressed(const struct device *dev, struct gpio_callback *cb,
+static void button_pressed(const struct device *dev, struct gpio_callback *cb,
                     uint32_t pins)
 {
     const struct pio_qdec_config *config = dev->config;

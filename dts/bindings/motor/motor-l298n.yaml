@@ -1,0 +1,46 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+description: |
+  PWM-driven Dual H Bridge. 
+  
+  Example configuration:
+  
+  motors: motors {
+    compatible = "motor-l298n";
+    pwms = <&pwm 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>, // PWM_0A_P16
+           <&pwm 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>; // PWM_0B_P17
+    ch-1-dir-gpios = <&gpio0 18 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+    ch-2-dir-gpios = <&gpio0 26 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+  };
+
+compatible: "motor-l298n"
+
+include: base.yaml
+
+properties:
+  pwms:
+    required: true
+    type: phandle-array
+    description: PWM specifier driving the enable inputs. Expects 1 or 2 
+      entries for 1/2 channels.
+
+  ch-1-dir-gpios:
+    type: phandle-array
+    required: false
+    description: |
+      Array of direction control GPIOs for CH1. It is assumed that the first 
+      GPIO corresponds to the lower numbered input on the L298N and thus a 
+      logic H represents the "forward" direction. If only 1 GPIO is provided, 
+      braking functionality will be disabled. If no GPIO is provided, direction
+      control will be disabled.
+
+  ch-2-dir-gpios:
+    type: phandle-array
+    required: false
+    description: |
+      Array of direction control GPIOs for CH2. It is assumed that the first 
+      GPIO corresponds to the lower numbered input on the L298N and thus a 
+      logic H represents the "forward" direction. If only 1 GPIO is provided, 
+      braking functionality will be disabled. If no GPIO is provided, direction
+      control will be disabled.

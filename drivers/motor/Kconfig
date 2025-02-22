@@ -1,0 +1,25 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+menuconfig MOTOR
+    bool "Motor"
+    help
+    	  Include motor drivers in the system config.
+
+if MOTOR
+
+config MOTOR_INIT_PRIORITY
+	int "Motor init priority"
+	default KERNEL_INIT_PRIORITY_DEVICE
+	help
+	  Motor driver device initialization priority.
+
+module = MOTOR
+module-str = motor
+source "subsys/logging/Kconfig.template.log_config"
+
+# zephyr-keep-sorted-start
+rsource "Kconfig.l298n"
+# zephyr-keep-sorted-stop
+
+endif # MOTOR

@@ -1,0 +1,11 @@
+# Copyright (c) 2025 Jared Woolston
+# SPDX-License-Identifier: Apache-2.0
+
+if MOTOR
+config MOTOR_L298N
+	bool "L298N Dual H-Bridge Motor Driver"
+	default n
+	select PINCTRL
+	depends on PWM
+	depends on GPIO
+endif #MOTOR

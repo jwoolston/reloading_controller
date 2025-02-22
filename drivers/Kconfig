@@ -3,5 +3,6 @@
 
 menu "Drivers"
 rsource "input/Kconfig"
+rsource "motor/Kconfig"
 rsource "sensor/Kconfig"
 endmenu
