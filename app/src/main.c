@@ -11,6 +11,9 @@
 #include <zephyr/drivers/led.h>
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/sys/util.h>
+#include <zephyr/drivers/display.h>
+#include <lvgl.h>
+#include <lvgl_input_device.h>
 
 #include <zephyr/logging/log.h>
 
@@ -45,6 +48,15 @@ static const struct adc_dt_spec adc_channels[] = {
 
 const struct device *qdec0 = DEVICE_DT_GET(DT_NODELABEL(pio1_qdec));
 
+static uint32_t count;
+
+static void lv_btn_click_callback(lv_event_t *e)
+{
+    ARG_UNUSED(e);
+
+    count = 0;
+}
+
 int main(void) {
     int err;
     uint32_t count = 0;
@@ -58,13 +70,13 @@ int main(void) {
     /* Configure channels individually prior to sampling. */
     for (size_t i = 0U; i < ARRAY_SIZE(adc_channels); i++) {
         if (!adc_is_ready_dt(&adc_channels[i])) {
-            printk("ADC controller device %s not ready\n", adc_channels[i].dev->name);
+            LOG_ERR("ADC controller device %s not ready\n", adc_channels[i].dev->name);
             return 0;
         }
 
         err = adc_channel_setup_dt(&adc_channels[i]);
         if (err < 0) {
-            printk("Could not setup channel #%d (%d)\n", i, err);
+            LOG_ERR("Could not setup channel #%d (%d)\n", i, err);
             return 0;
         }
     }
@@ -74,38 +86,79 @@ int main(void) {
 
     led_pwm = DEVICE_DT_GET(LED_PWM_NODE_ID);
     if (!device_is_ready(led_pwm)) {
-        printk("Device %s is not ready", led_pwm->name);
+        LOG_ERR("Device %s is not ready", led_pwm->name);
         return 0;
     }
 
     if (!num_leds) {
-        printk("No LEDs found for %s", led_pwm->name);
+        LOG_ERR("No LEDs found for %s", led_pwm->name);
         return 0;
     }
 
     int16_t level = MAX_BRIGHTNESS;
 
-    printk("Testing LED %d - %s", led, led_label[led] ? : "no label");
+    LOG_INF("Testing LED %d - %s", led, led_label[led] ? : "no label");
 
     /* Turn LED on. */
     err = led_on(led_pwm, led);
     if (err < 0) {
-        printk("err=%d", err);
+        LOG_ERR("err=%d", err);
         return -1;
     }
-    printk("  Turned on\n");
+    LOG_INF("  Turned on\n");
     k_sleep(K_MSEC(1000));
 
     err = led_set_brightness(led_pwm, led, level);
     if (err < 0) {
-        printk("err=%d brightness=%d\n", err, level);
+        LOG_ERR("err=%d brightness=%d\n", err, level);
         return -1;
     }
 
+    char count_str[11] = {0};
+    const struct device *display_dev;
+    lv_obj_t *hello_world_label;
+    lv_obj_t *count_label;
+
+    display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
+    if (!device_is_ready(display_dev)) {
+        LOG_ERR("Device not ready, aborting test");
+        return 0;
+    }
+
+    if (IS_ENABLED(CONFIG_LV_Z_POINTER_INPUT)) {
+        lv_obj_t *hello_world_button;
+
+        hello_world_button = lv_button_create(lv_screen_active());
+        lv_obj_align(hello_world_button, LV_ALIGN_CENTER, 0, -15);
+        lv_obj_add_event_cb(hello_world_button, lv_btn_click_callback, LV_EVENT_CLICKED,
+                            NULL);
+        hello_world_label = lv_label_create(hello_world_button);
+    } else {
+        hello_world_label = lv_label_create(lv_screen_active());
+    }
+
+    lv_label_set_text(hello_world_label, "Hello world!");
+    lv_obj_align(hello_world_label, LV_ALIGN_CENTER, 0, 0);
+
+    count_label = lv_label_create(lv_screen_active());
+    lv_obj_align(count_label, LV_ALIGN_BOTTOM_MID, 0, 0);
+
+    lv_timer_handler();
+    display_blanking_off(display_dev);
+
+    display_set_brightness(display_dev, 100);
+    lv_obj_set_style_bg_color(hello_world_label, lv_palette_main(LV_PALETTE_RED),LV_PART_MAIN);
 
     while (1) {
-        k_sleep(K_MSEC(1000));
-        printk("ADC reading[%u]:\n", count++);
+        if ((count % 100) == 0U) {
+            sprintf(count_str, "%d", count/100U);
+            lv_label_set_text(count_label, count_str);
+        }
+        lv_timer_handler();
+        ++count;
+        k_sleep(K_MSEC(10));
+        //k_sleep(K_MSEC(1000));
+        //printk("ADC reading[%u]:\n", count++);
         for (size_t i = 0U; i < ARRAY_SIZE(adc_channels); i++) {
             int32_t val_mv;
 
@@ -129,7 +182,6 @@ int main(void) {
             if (adc_channels[i].channel_cfg.differential) {
                 val_mv = (int32_t)((int16_t)buf);
             } else {
-                printk("Single ended reading.");
                 val_mv = (int32_t)buf;
             }
             printk("%"PRId32, val_mv);

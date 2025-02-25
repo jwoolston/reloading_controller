@@ -12,8 +12,8 @@
 		compatible = "motor-l298n";
 		pwms = <&pwm 0 PWM_MSEC(20) PWM_POLARITY_NORMAL>, // PWM_0A_P16
 			   <&pwm 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>; // PWM_0B_P17
-		ch-1-dir-gpios = <&gpio0 27 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
-		//ch-2-dir-gpios = <&gpio0 28 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		ch-1-dir-gpios = <&gpio0 18 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		ch-2-dir-gpios = <&gpio0 26 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 	};*/
 };
 
@@ -40,7 +40,7 @@
 		compatible = "raspberrypi,pico-qdec-pio";
 		pinctrl-0 = <&pio1_qdec_default>;
 		pinctrl-names = "default";
-		btn-gpios = <&gpio0 28 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		btn-gpios = <&gpio0 18 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
 		zephyr,axis = <INPUT_REL_WHEEL>;
 		zephyr,key = <INPUT_KEY_0>;
 		dmas = <&dma 0 RPI_PICO_DMA_SLOT_PIO1_RX0 0>;
