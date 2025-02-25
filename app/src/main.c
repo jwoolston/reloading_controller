@@ -8,6 +8,7 @@
 #include <zephyr/device.h>
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/adc.h>
+#include <zephyr/drivers/led.h>
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/sys/util.h>
 
@@ -15,11 +16,15 @@
 
 LOG_MODULE_REGISTER(main, CONFIG_LOG_DEFAULT_LEVEL);
 
-#define PWM_LCD_ALIAS(i) DT_ALIAS(_CONCAT(pwm_lcd, i))
-#define PWM_LCD_IS_OKAY(i) DT_NODE_HAS_STATUS_OKAY(DT_PARENT(PWM_LCD_ALIAS(i)))
-#define PWM_LCD(i, _) IF_ENABLED(PWM_LCD_IS_OKAY(i), (PWM_DT_SPEC_GET(PWM_LCD_ALIAS(i)),))
+#define LED_PWM_NODE_ID	 DT_COMPAT_GET_ANY_STATUS_OKAY(pwm_leds)
 
-static const struct pwm_dt_spec pwm_led = PWM_DT_SPEC_GET(DT_ALIAS(pwm_lcd0));
+const char *led_label[] = {
+    DT_FOREACH_CHILD_SEP_VARGS(LED_PWM_NODE_ID, DT_PROP_OR, (,), label, NULL)
+};
+
+const int num_leds = ARRAY_SIZE(led_label);
+
+#define MAX_BRIGHTNESS	100
 
 #define NUM_STEPS	50U
 #define SLEEP_MSEC	25U
@@ -41,18 +46,6 @@ static const struct adc_dt_spec adc_channels[] = {
 const struct device *qdec0 = DEVICE_DT_GET(DT_NODELABEL(pio1_qdec));
 
 int main(void) {
-    uint32_t pulse_width;
-    uint32_t step;
-    uint8_t dir = 1U;
-    int ret;
-
-    pulse_width = 0;
-    step = pwm_led.period / NUM_STEPS;
-    if (!pwm_is_ready_dt(&pwm_led)) {
-        printk("Error: PWM device %s is not ready\n", pwm_led.dev->name);
-        return 0;
-    }
-
     int err;
     uint32_t count = 0;
     uint16_t buf;
@@ -76,35 +69,42 @@ int main(void) {
         }
     }
 
+    const struct device *led_pwm;
+    uint8_t led = 0;
+
+    led_pwm = DEVICE_DT_GET(LED_PWM_NODE_ID);
+    if (!device_is_ready(led_pwm)) {
+        printk("Device %s is not ready", led_pwm->name);
+        return 0;
+    }
+
+    if (!num_leds) {
+        printk("No LEDs found for %s", led_pwm->name);
+        return 0;
+    }
+
+    int16_t level = MAX_BRIGHTNESS;
+
+    printk("Testing LED %d - %s", led, led_label[led] ? : "no label");
+
+    /* Turn LED on. */
+    err = led_on(led_pwm, led);
+    if (err < 0) {
+        printk("err=%d", err);
+        return -1;
+    }
+    printk("  Turned on\n");
+    k_sleep(K_MSEC(1000));
+
+    err = led_set_brightness(led_pwm, led, level);
+    if (err < 0) {
+        printk("err=%d brightness=%d\n", err, level);
+        return -1;
+    }
+
+
     while (1) {
-        // Loop PWM 1000ms then do ADC reading
-        for (int cnt = 0; cnt < 1000 / SLEEP_MSEC; ++cnt) {
-                ret = pwm_set_pulse_dt(&pwm_led, pulse_width);
-                if (ret) {
-                    printk("Error %d: failed to set pulse width for LED\n", ret);
-                }
-                printk("LED: Using pulse width %d%%\n",
-                       100 * pulse_width / pwm_led.period);
-
-                if (dir) {
-                    if (pulse_width + step >= pwm_led.period) {
-                        pulse_width = pwm_led.period;
-                        dir = 0U;
-                    } else {
-                        pulse_width += step;
-                    }
-                } else {
-                    if (pulse_width <= step) {
-                        pulse_width = 0;
-                        dir = 1U;
-                    } else {
-                        pulse_width -= step;
-                    }
-                }
-
-            k_sleep(K_MSEC(SLEEP_MSEC));
-        }
-
+        k_sleep(K_MSEC(1000));
         printk("ADC reading[%u]:\n", count++);
         for (size_t i = 0U; i < ARRAY_SIZE(adc_channels); i++) {
             int32_t val_mv;
