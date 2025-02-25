@@ -9,6 +9,7 @@
 #include <zephyr/devicetree.h>
 #include <zephyr/drivers/adc.h>
 #include <zephyr/drivers/led.h>
+#include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/sys/util.h>
 #include <zephyr/drivers/display.h>
@@ -19,18 +20,14 @@
 
 LOG_MODULE_REGISTER(main, CONFIG_LOG_DEFAULT_LEVEL);
 
-#define LED_PWM_NODE_ID	 DT_COMPAT_GET_ANY_STATUS_OKAY(pwm_leds)
+/* The devicetree node identifier for the "led0" alias. */
+#define LED0_NODE DT_ALIAS(led0)
 
-const char *led_label[] = {
-    DT_FOREACH_CHILD_SEP_VARGS(LED_PWM_NODE_ID, DT_PROP_OR, (,), label, NULL)
-};
-
-const int num_leds = ARRAY_SIZE(led_label);
-
-#define MAX_BRIGHTNESS	100
-
-#define NUM_STEPS	50U
-#define SLEEP_MSEC	25U
+/*
+ * A build error on this line means your board is unsupported.
+ * See the sample documentation for information on how to fix this.
+ */
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
 #if !DT_NODE_EXISTS(DT_PATH(zephyr_user)) || \
 !DT_NODE_HAS_PROP(DT_PATH(zephyr_user), io_channels)
@@ -81,38 +78,18 @@ int main(void) {
         }
     }
 
-    const struct device *led_pwm;
-    uint8_t led = 0;
+    int ret;
+    bool led_state = true;
 
-    led_pwm = DEVICE_DT_GET(LED_PWM_NODE_ID);
-    if (!device_is_ready(led_pwm)) {
-        LOG_ERR("Device %s is not ready", led_pwm->name);
+    if (!gpio_is_ready_dt(&led)) {
         return 0;
     }
 
-    if (!num_leds) {
-        LOG_ERR("No LEDs found for %s", led_pwm->name);
+    ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
+    if (ret < 0) {
         return 0;
     }
-
-    int16_t level = MAX_BRIGHTNESS;
-
-    LOG_INF("Testing LED %d - %s", led, led_label[led] ? : "no label");
-
-    /* Turn LED on. */
-    err = led_on(led_pwm, led);
-    if (err < 0) {
-        LOG_ERR("err=%d", err);
-        return -1;
-    }
-    LOG_INF("  Turned on\n");
-    k_sleep(K_MSEC(1000));
-
-    err = led_set_brightness(led_pwm, led, level);
-    if (err < 0) {
-        LOG_ERR("err=%d brightness=%d\n", err, level);
-        return -1;
-    }
+    ret = gpio_pin_set_dt(&led, 1);
 
     char count_str[11] = {0};
     const struct device *display_dev;
@@ -147,7 +124,6 @@ int main(void) {
     display_blanking_off(display_dev);
 
     display_set_brightness(display_dev, 100);
-    lv_obj_set_style_bg_color(hello_world_label, lv_palette_main(LV_PALETTE_RED),LV_PART_MAIN);
 
     while (1) {
         if ((count % 100) == 0U) {
