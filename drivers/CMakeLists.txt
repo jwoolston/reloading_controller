@@ -3,4 +3,5 @@
 
 # Out-of-tree drivers for existing driver classes
 add_subdirectory_ifdef(CONFIG_INPUT input)
+add_subdirectory_ifdef(CONFIG_MOTOR motor)
 add_subdirectory_ifdef(CONFIG_SENSOR sensor)

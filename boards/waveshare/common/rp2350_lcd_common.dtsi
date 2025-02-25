@@ -24,7 +24,7 @@
 	};
 
 	zephyr,user {
-		io-channels = <&adc 0>;
+		io-channels = <&adc 3>;
 	};
 
 	chosen {
@@ -47,11 +47,11 @@
 
 	pwm_leds {
 		compatible = "pwm-leds";
-		status = "disabled";
+		status = "okay";
 
 		pwm_led0: pwm_led_0 {
 			pwms = <&pwm 9 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
-			label = "PWM_LED";
+			label = "BACKLIGHT";
 		};
 	};
 
@@ -77,6 +77,14 @@
 		};
 	};
 };
+
+/*&usbd {
+	status = "okay";
+	cdc_acm_uart0 {
+		compatible = "zephyr,cdc-acm-uart";
+		label = "Zephyr USB CDC-ACM";
+	};
+};*/
 
 &uart0 {
 	current-speed = <115200>;
@@ -109,12 +117,13 @@
 	pinctrl-0 = <&adc_default>;
 	pinctrl-names = "default";
 	status = "okay";
+	vref-mv = <3300>;
 
 	#address-cells = <1>;
 	#size-cells = <0>;
 
-	channel@0 {
-		reg = <0>;
+	channel@3 {
+		reg = <3>;
 		zephyr,gain = "ADC_GAIN_1";
 		zephyr,reference = "ADC_REF_INTERNAL";
 		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
@@ -133,9 +142,9 @@
 &timer0 {
 	status = "okay";
 };
-
+/*
 zephyr_udc0: &usbd {
-	status = "okay";
-};
+	status = "disabled";
+};*/
 
 pico_serial: &uart0 {};

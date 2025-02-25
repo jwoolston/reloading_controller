@@ -9,13 +9,19 @@
 #include <stdlib.h>
 
 #include <zephyr/device.h>
+#include <zephyr/devicetree.h>
 #include <zephyr/drivers/gpio.h>
+#include <zephyr/drivers/pwm.h>
 #include <zephyr/logging/log.h>
+
+#if DT_NUM_INST_STATUS_OKAY(DT_DRV_COMPAT) == 0
+#error"L298N Motor controller is not defined in DTS"
+#endif
 
 LOG_MODULE_REGISTER(motor_l298n, CONFIG_MOTOR_LOG_LEVEL);
 
 struct motor_l298n_channel {
-    const struct pwm_dt_spec *enable_pin;
+    const struct pwm_dt_spec enable_pin;
     const struct gpio_dt_spec dir_pins[2];
 };
 
@@ -27,28 +33,45 @@ struct motor_l298n_channel_state {
 };
 
 struct motor_l298n_config {
-    const struct device *motor_dev;
-    const struct gpio_dt_spec *ch1;
-    const struct gpio_dt_spec *ch2; // If NULL, this channel is not enabled
+    //const struct device *motor_dev;
+    const struct motor_l298n_channel ch1;
+    const struct motor_l298n_channel ch2; // If NULL, this channel is not enabled
 };
 
 struct motor_l298n_data {
-    struct motor_l298n_channel_state *ch1;
-    struct motor_l298n_channel_state *ch2; // If NULL, this channel is not enabled
+    struct motor_l298n_channel_state ch1;
+    struct motor_l298n_channel_state ch2; // If NULL, this channel is not enabled
 };
 
-#define MOTOR_L298N_CONFIGURE_CHANNEL(idx, channel)                           \
-    {                                                                         \
-        .enable_pin = PWM_DT_SPEC_INST_GET_BY_IDX_OR(idx, channel, NULL),     \
-        .dir_pins = {                                                         \
-            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_1_dir_gpios, 0, NULL),    \
-            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_1_dir_gpios, 0, NULL)     \
-        }                                                                     \
-    }
+static int motor_l298n_init(const struct device *dev)
+{
+    const struct motor_l298n_config *config = dev->config;
+    struct motor_l298n_data *data = dev->data;
+
+
+    return 0;
+}
+
+/**
+ * Create a channel instance or return NULL based on the existance of the channel
+ * in the devicetree.
+ *
+ * @param idx The instance index of the Motor L298N driver.
+ * @param channel The channel being configured, 0 based.
+ * @return A configured motor_l298n_channel struct or NULL
+ */
+#define MOTOR_L298N_CONFIGURE_CHANNEL(idx, channel)                                 \
+    COND_CODE_1(DT_INST_PROP_HAS_IDX(idx, pwms, channel),                           \
+    ({                                                                              \
+        .enable_pin = PWM_DT_SPEC_INST_GET_BY_IDX_OR(idx, channel, NULL),           \
+        .dir_pins = {                                                               \
+            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 0, NULL),\
+            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 1, NULL) \
+        }                                                                           \
+    }), NULL)                                                                       \
 
 #define MOTOR_L298N_INIT(idx)						            \
         static const struct motor_l298n_config motor_l298n##idx##_config = {        \
-            .motordev = DEVICE_DT_GET(DT_INST_PARENT(idx)),		            \
             .ch1 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 0),                           \
             .ch2 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 1)                            \
         };								            \
@@ -57,16 +80,16 @@ struct motor_l298n_data {
             .ch1 = {                                                                \
                 .enabled = false,                                                   \
                 .forward = true,                                                    \
-                .pulse_width = 0,                                                   \
+                .pulse_width = 0                                                    \
             },                                                                      \
             .ch2 = {                                                                \
                 .enabled = false,                                                   \
                 .forward = true,                                                    \
-                .pulse_width = 0,                                                   \
+                .pulse_width = 0                                                    \
             }                                                                       \
         };                                                                          \
                                                                                     \
-        DEVICE_DT_INST_DEFINE(idx, motor_l298n_init, PM_DEVICE_DT_INST_GET(idx),    \
+        DEVICE_DT_INST_DEFINE(idx, motor_l298n_init, NULL,                          \
                               &motor_l298n##idx##_data, &motor_l298n##idx##_config, \
                               POST_KERNEL, CONFIG_MOTOR_INIT_PRIORITY, NULL);
 

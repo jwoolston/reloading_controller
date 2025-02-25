@@ -83,7 +83,7 @@ int main(void) {
                 if (ret) {
                     printk("Error %d: failed to set pulse width for LED\n", ret);
                 }
-                printk("LED %d: Using pulse width %%\n",
+                printk("LED: Using pulse width %d%%\n",
                        100 * pulse_width / pwm_led.period);
 
                 if (dir) {
@@ -129,11 +129,13 @@ int main(void) {
             if (adc_channels[i].channel_cfg.differential) {
                 val_mv = (int32_t)((int16_t)buf);
             } else {
+                printk("Single ended reading.");
                 val_mv = (int32_t)buf;
             }
             printk("%"PRId32, val_mv);
             err = adc_raw_to_millivolts_dt(&adc_channels[i],
                                            &val_mv);
+            val_mv = (val_mv * 3) / 2;
             /* conversion to mV may not be supported, skip if not */
             if (err < 0) {
                 printk(" (value in mV not available)\n");
