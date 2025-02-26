@@ -19,7 +19,7 @@
 / {
 	aliases {
 		led0 = &led0;
-		pwm-lcd0 = &pwm_led0;
+		//pwm-lcd0 = &pwm_led0;
 		watchdog0 = &wdt0;
 	};
 
@@ -45,7 +45,7 @@
 		};
 	};
 
-	pwm_leds {
+	/*pwm_leds {
 		compatible = "pwm-leds";
 		status = "okay";
 
@@ -53,7 +53,7 @@
 			pwms = <&pwm 9 PWM_MSEC(20) PWM_POLARITY_NORMAL>;
 			label = "BACKLIGHT";
 		};
-	};
+	};*/
 
 	/* MIPI DBI */
 	mipi_dbi {
@@ -69,8 +69,8 @@
 			status = "okay";
 			compatible = "galaxycore,gc9x01x";
 			reg = <0>;
-			mipi-max-frequency = <75000000>;
-			pixel-format = <PANEL_PIXEL_FORMAT_RGB_888>;
+			mipi-max-frequency = <50000000>;
+			pixel-format = <PANEL_PIXEL_FORMAT_RGB_565>;
 			display-inversion;
 			width = <240>;
 			height = <240>;
