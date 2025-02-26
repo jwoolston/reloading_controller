@@ -30,8 +30,8 @@
 	chosen {
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
-		zephyr,console = &uart0;
-		zephyr,shell-uart = &uart0;
+		zephyr,console = &usb_uart;
+		zephyr,shell-uart = &usb_uart;
 		zephyr,code-partition = &code_partition;
 		zephyr,display = &gc9a01;
 	};
@@ -78,19 +78,19 @@
 	};
 };
 
-/*&usbd {
+&usbd {
 	status = "okay";
-	cdc_acm_uart0 {
+	usb_uart: cdc_acm_uart0 {
 		compatible = "zephyr,cdc-acm-uart";
 		label = "Zephyr USB CDC-ACM";
 	};
-};*/
+};
 
 &uart0 {
-	current-speed = <115200>;
-	status = "okay";
-	pinctrl-0 = <&uart0_default>;
-	pinctrl-names = "default";
+	//current-speed = <115200>;
+	status = "disabled";
+	//pinctrl-0 = <&uart0_default>;
+	//pinctrl-names = "default";
 };
 
 &gpio0 {
@@ -132,20 +132,20 @@
 	};
 };
 
-&pwm {
+/*&pwm {
 	pinctrl-0 = <&pwm_ch4b_default>;
 	pinctrl-names = "default";
 	divider-int-0 = <255>;
 	divider-int-4 = <255>;
 	status = "okay";
-};
+};*/
 
 &timer0 {
 	status = "okay";
 };
-/*
-zephyr_udc0: &usbd {
-	status = "disabled";
-};*/
 
-pico_serial: &uart0 {};
+zephyr_udc0: &usbd {
+	status = "okay";
+};
+
+pico_serial: &usb_uart {};
