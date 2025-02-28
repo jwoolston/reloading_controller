@@ -30,8 +30,10 @@
 	chosen {
 		zephyr,sram = &sram0;
 		zephyr,flash = &flash0;
-		zephyr,console = &usb_uart;
-		zephyr,shell-uart = &usb_uart;
+		//zephyr,console = &usb_uart;
+		//zephyr,shell-uart = &usb_uart;
+		zephyr,console = &uart0;
+		zephyr,shell-uart = &uart0;
 		zephyr,code-partition = &code_partition;
 		zephyr,display = &gc9a01;
 	};
@@ -69,11 +71,20 @@
 			status = "okay";
 			compatible = "galaxycore,gc9x01x";
 			reg = <0>;
-			mipi-max-frequency = <50000000>;
+			mipi-max-frequency = <75000000>;
 			pixel-format = <PANEL_PIXEL_FORMAT_RGB_565>;
 			display-inversion;
 			width = <240>;
 			height = <240>;
+			pwrctrl1 = [00];
+			pwrctrl2 = [13];
+			pwrctrl3 = [13];
+			pwrctrl4 = [22];
+			gamma1 = [45 09 08 08 26 2A];
+			gamma2 = [43 70 72 36 37 6F];
+			gamma3 = [45 09 08 08 26 2A];
+			gamma4 = [43 70 72 36 37 6F];
+			framerate = [34];
 		};
 	};
 };
@@ -87,10 +98,10 @@
 };
 
 &uart0 {
-	//current-speed = <115200>;
-	status = "disabled";
-	//pinctrl-0 = <&uart0_default>;
-	//pinctrl-names = "default";
+	current-speed = <115200>;
+	status = "okay";
+	pinctrl-0 = <&uart0_default>;
+	pinctrl-names = "default";
 };
 
 &gpio0 {
@@ -148,4 +159,5 @@ zephyr_udc0: &usbd {
 	status = "okay";
 };
 
-pico_serial: &usb_uart {};
+//pico_serial: &usb_uart {};
+pico_serial: &uart0 {};

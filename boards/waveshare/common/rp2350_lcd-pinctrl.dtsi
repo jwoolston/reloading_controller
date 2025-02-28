@@ -6,12 +6,22 @@
 #include <zephyr/dt-bindings/pinctrl/rpi-pico-rp2350a-pinctrl.h>
 
 &pinctrl {
-	/*uart0_default: uart0_default {
+	uart0_default: uart0_default {
 		group1 {
-			pinmux = <UART0_TX_P28>;
+			pinmux = <UART0_TX_P16>;
 		};
 		group2 {
-			pinmux = <UART0_RX_P1>;
+			pinmux = <UART0_RX_P17>;
+			input-enable;
+		};
+	};
+
+	/*uart1_default: uart1_default {
+		group1 {
+			pinmux = <UART1_TX_P26>;
+		};
+		group2 {
+			pinmux = <UART1_RX_P27>;
 			input-enable;
 		};
 	};*/
