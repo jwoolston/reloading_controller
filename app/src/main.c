@@ -12,6 +12,7 @@
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/sys/util.h>
 #include <zephyr/drivers/display.h>
+#include <app/drivers/motor.h>
 /* <lvgl.h>
 #include <lvgl_mem.h>
 #include <lv_demos.h>*/
@@ -43,7 +44,9 @@ static const struct adc_dt_spec adc_channels[] = {
                          DT_SPEC_AND_COMMA)
 };
 
-//const struct device *qdec0 = DEVICE_DT_GET(DT_NODELABEL(pio1_qdec));
+const struct device *qdec0 = DEVICE_DT_GET(DT_NODELABEL(pio1_qdec));
+
+//const struct device *motor = DEVICE_DT_GET(DT_NODELABEL(motor_l298n));
 
 //static uint32_t count;
 
@@ -64,58 +67,6 @@ enum corner {
 typedef void (*fill_buffer)(enum corner corner, uint8_t grey, uint8_t *buf,
 			    size_t buf_size);
 
-
-static void fill_buffer_argb8888(enum corner corner, uint8_t grey, uint8_t *buf,
-				 size_t buf_size)
-{
-	uint32_t color = 0;
-
-	switch (corner) {
-	case TOP_LEFT:
-		color = 0xFFFF0000u;
-		break;
-	case TOP_RIGHT:
-		color = 0xFF00FF00u;
-		break;
-	case BOTTOM_RIGHT:
-		color = 0xFF0000FFu;
-		break;
-	case BOTTOM_LEFT:
-		color = 0xFF000000u | grey << 16 | grey << 8 | grey;
-		break;
-	}
-
-	for (size_t idx = 0; idx < buf_size; idx += 4) {
-		*((uint32_t *)(buf + idx)) = color;
-	}
-}
-
-static void fill_buffer_rgb888(enum corner corner, uint8_t grey, uint8_t *buf,
-			       size_t buf_size)
-{
-	uint32_t color = 0;
-
-	switch (corner) {
-	case TOP_LEFT:
-		color = 0x00FF0000u;
-		break;
-	case TOP_RIGHT:
-		color = 0x0000FF00u;
-		break;
-	case BOTTOM_RIGHT:
-		color = 0x000000FFu;
-		break;
-	case BOTTOM_LEFT:
-		color = grey << 16 | grey << 8 | grey;
-		break;
-	}
-
-	for (size_t idx = 0; idx < buf_size; idx += 3) {
-		*(buf + idx + 0) = color >> 16;
-		*(buf + idx + 1) = color >> 8;
-		*(buf + idx + 2) = color >> 0;
-	}
-}
 
 static uint16_t get_rgb565_color(enum corner corner, uint8_t grey)
 {
@@ -152,46 +103,6 @@ static void fill_buffer_rgb565(enum corner corner, uint8_t grey, uint8_t *buf,
 	}
 }
 
-static void fill_buffer_bgr565(enum corner corner, uint8_t grey, uint8_t *buf,
-			       size_t buf_size)
-{
-	uint16_t color = get_rgb565_color(corner, grey);
-
-	for (size_t idx = 0; idx < buf_size; idx += 2) {
-		*(uint16_t *)(buf + idx) = color;
-	}
-}
-
-static void fill_buffer_mono(enum corner corner, uint8_t grey,
-			     uint8_t black, uint8_t white,
-			     uint8_t *buf, size_t buf_size)
-{
-	uint16_t color;
-
-	switch (corner) {
-	case BOTTOM_LEFT:
-		color = (grey & 0x01u) ? white : black;
-		break;
-	default:
-		color = black;
-		break;
-	}
-
-	memset(buf, color, buf_size);
-}
-
-static inline void fill_buffer_mono01(enum corner corner, uint8_t grey,
-				      uint8_t *buf, size_t buf_size)
-{
-	fill_buffer_mono(corner, grey, 0x00u, 0xFFu, buf, buf_size);
-}
-
-static inline void fill_buffer_mono10(enum corner corner, uint8_t grey,
-				      uint8_t *buf, size_t buf_size)
-{
-	fill_buffer_mono(corner, grey, 0xFFu, 0x00u, buf, buf_size);
-}
-
 int sample(void)
 {
 	size_t x;
@@ -200,10 +111,8 @@ int sample(void)
 	size_t rect_h;
 	size_t h_step;
 	size_t scale;
-	size_t grey_count;
 	uint8_t bg_color;
 	uint8_t *buf;
-	int32_t grey_scale_sleep;
 	const struct device *display_dev;
 	struct display_capabilities capabilities;
 	struct display_buffer_descriptor buf_desc;
@@ -243,12 +152,6 @@ int sample(void)
 	rect_w *= scale;
 	rect_h *= scale;
 
-	if (capabilities.screen_info & SCREEN_INFO_EPD) {
-		grey_scale_sleep = 10000;
-	} else {
-		grey_scale_sleep = 100;
-	}
-
 	if (capabilities.screen_info & SCREEN_INFO_X_ALIGNMENT_WIDTH) {
 		rect_w = capabilities.x_resolution;
 	}
@@ -260,37 +163,10 @@ int sample(void)
 	}
 
 	switch (capabilities.current_pixel_format) {
-	case PIXEL_FORMAT_ARGB_8888:
-		bg_color = 0x00u;
-		fill_buffer_fnc = fill_buffer_argb8888;
-		buf_size *= 4;
-		break;
-	case PIXEL_FORMAT_RGB_888:
-		bg_color = 0xFFu;
-		fill_buffer_fnc = fill_buffer_rgb888;
-		buf_size *= 3;
-		break;
 	case PIXEL_FORMAT_RGB_565:
 		bg_color = 0xFFu;
 		fill_buffer_fnc = fill_buffer_rgb565;
 		buf_size *= 2;
-		break;
-	case PIXEL_FORMAT_BGR_565:
-		bg_color = 0xFFu;
-		fill_buffer_fnc = fill_buffer_bgr565;
-		buf_size *= 2;
-		break;
-	case PIXEL_FORMAT_MONO01:
-		bg_color = 0xFFu;
-		fill_buffer_fnc = fill_buffer_mono01;
-		buf_size = DIV_ROUND_UP(DIV_ROUND_UP(
-			buf_size, NUM_BITS(uint8_t)), sizeof(uint8_t));
-		break;
-	case PIXEL_FORMAT_MONO10:
-		bg_color = 0x00u;
-		fill_buffer_fnc = fill_buffer_mono10;
-		buf_size = DIV_ROUND_UP(DIV_ROUND_UP(
-			buf_size, NUM_BITS(uint8_t)), sizeof(uint8_t));
 		break;
 	default:
 		LOG_ERR("Unsupported pixel format. Aborting sample.");
@@ -444,6 +320,8 @@ int main(void) {
     k_sleep(K_MSEC(1000));
     lvgl_print_heap_info(false);*/
     sample();
+
+    //motor_set_period_ns(motor, 123456);
     while (1) {
         /*f (lv_screen_active() == NULL) {
             LOG_ERR("No display attached");

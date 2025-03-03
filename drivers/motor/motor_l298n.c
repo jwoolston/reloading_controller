@@ -14,6 +14,8 @@
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/logging/log.h>
 
+#include <app/drivers/motor.h>
+
 #if DT_NUM_INST_STATUS_OKAY(DT_DRV_COMPAT) == 0
 #error"L298N Motor controller is not defined in DTS"
 #endif
@@ -43,11 +45,37 @@ struct motor_l298n_data {
     struct motor_l298n_channel_state ch2; // If NULL, this channel is not enabled
 };
 
+static int motor_l298n_set_period_ns(const struct device *dev, unsigned int period_ns) {
+    const struct motor_l298n_config *config = dev->config;
+    struct motor_l298n_data *data = dev->data;
+
+    LOG_DBG("Setting motor period to : %u", period_ns);
+
+    /*int ret = 0;
+    if (config->ch1 != NULL) {
+        uint64_t pulse_ns;
+        ret = pwm_cycles_to_nsec(config->ch1->enable_pin.dev, config->ch1->enable_pin.channel,
+                                 data->ch1.pulse_width, &pulse_ns);
+        if (ret < 0) {
+            LOG_ERR("pwm_cycles_to_nsec failed (%d)", ret);
+            return ret;
+        }
+        pwm_set_dt(&config->ch1->enable_pin, period_ns, (uint32_t) pulse_ns);
+    }*/
+
+    return 0;
+}
+
+static DEVICE_API(motor, motor_api) = {
+    .set_period_ns = &motor_l298n_set_period_ns,
+};
+
 static int motor_l298n_init(const struct device *dev)
 {
     const struct motor_l298n_config *config = dev->config;
     struct motor_l298n_data *data = dev->data;
 
+    LOG_DBG("Initializing L298N Motor Driver");
 
     return 0;
 }

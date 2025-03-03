@@ -10,100 +10,99 @@
 #include <zephyr/toolchain.h>
 
 /**
- * @defgroup drivers_blink Blink drivers
+ * @defgroup drivers_motor Motor drivers
  * @ingroup drivers
  * @{
  *
- * @brief A custom driver class to blink LEDs
+ * @brief A custom driver class to control DC motors
  *
- * This driver class is provided as an example of how to create custom driver
- * classes. It provides an interface to blink an LED at a configurable rate.
- * Implementations could include simple GPIO-controlled LEDs, addressable LEDs,
- * etc.
+ * This driver class provides a means to control DC motors via PWM with
+ * optional direction control. Depending on configuration, the driver
+ * can have no direction control, single pin or dual pin direction control.
+ * In the case of dual direction control, braking options are additionally
+ * enabled.
  */
 
 /**
- * @defgroup drivers_blink_ops Blink driver operations
+ * @defgroup drivers_motor_ops Motor driver operations
  * @{
  *
- * @brief Operations of the blink driver class.
+ * @brief Operations of the motor driver class.
  *
- * Each driver class tipically provides a set of operations that need to be
+ * Each driver class typically provides a set of operations that need to be
  * implemented by each driver. These are used to implement the public API. If
  * support for system calls is needed, the operations structure must be tagged
  * with `__subsystem` and follow the `${class}_driver_api` naming scheme.
  */
 
-/** @brief Blink driver class operations */
-__subsystem struct blink_driver_api {
+/** @brief Motor driver class operations */
+__subsystem struct motor_driver_api {
 	/**
-	 * @brief Configure the LED blink period.
+	 * @brief Configure the motor PWM period.
 	 *
-	 * @param dev Blink device instance.
-	 * @param period_ms Period of the LED blink in milliseconds, 0 to
-	 * disable blinking.
+	 * @param dev Motor device instance.
+	 * @param period_ns Period of the motor PWM in nanoseconds, 0 to
+	 * disable drive.
 	 *
 	 * @retval 0 if successful.
-	 * @retval -EINVAL if @p period_ms can not be set.
+	 * @retval -EINVAL if @p period_ns can not be set.
 	 * @retval -errno Other negative errno code on failure.
 	 */
-	int (*set_period_ms)(const struct device *dev, unsigned int period_ms);
+	int (*set_period_ns)(const struct device *dev, unsigned int period_ns);
 };
 
 /** @} */
 
 /**
- * @defgroup drivers_blink_api Blink driver API
+ * @defgroup drivers_motor_api Motor driver API
  * @{
  *
- * @brief Public API provided by the blink driver class.
+ * @brief Public API provided by the motor driver class.
  *
  * The public API is the interface that is used by applications to interact with
- * devices that implement the blink driver class. If support for system calls is
+ * devices that implement the motor driver class. If support for system calls is
  * needed, functions accessing device fields need to be tagged with `__syscall`
  * and provide an implementation that follows the `z_impl_${function_name}`
  * naming scheme.
  */
 
 /**
- * @brief Configure the LED blink period.
+ * @brief Configure the Motor PWM period.
  *
  *
- * @param dev Blink device instance.
- * @param period_ms Period of the LED blink in milliseconds.
+ * @param dev Motor device instance.
+ * @param period_ns Period of the motor PWM in nanoseconds.
  *
  * @retval 0 if successful.
- * @retval -EINVAL if @p period_ms can not be set.
+ * @retval -EINVAL if @p period_ns can not be set.
  * @retval -errno Other negative errno code on failure.
  */
-__syscall int blink_set_period_ms(const struct device *dev,
-				  unsigned int period_ms);
+__syscall int motor_set_period_ns(const struct device *dev,
+				  unsigned int period_ns);
 
-static inline int z_impl_blink_set_period_ms(const struct device *dev,
-					     unsigned int period_ms)
+static inline int z_impl_motor_set_period_ns(const struct device *dev,
+					     unsigned int period_ns)
 {
-	__ASSERT_NO_MSG(DEVICE_API_IS(blink, dev));
+	__ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
 
-	return DEVICE_API_GET(blink, dev)->set_period_ms(dev, period_ms);
+	return DEVICE_API_GET(motor, dev)->set_period_ns(dev, period_ns);
 }
 
 /**
- * @brief Turn LED blinking off.
+ * @brief Turn Motor drive off.
  *
- * This is a convenience function to turn off the LED blinking. It also shows
- * how to create convenience functions that re-use other driver functions, or
- * driver operations, to provide a higher-level API.
+ * This is a convenience function to turn off the motor.
  *
- * @param dev Blink device instance.
+ * @param dev Motor device instance.
  *
- * @return See blink_set_period_ms().
+ * @return See motor_set_period_ns().
  */
-static inline int blink_off(const struct device *dev)
+static inline int motor_off(const struct device *dev)
 {
-	return blink_set_period_ms(dev, 0);
+	return motor_set_period_ns(dev, 0);
 }
 
-#include <syscalls/blink.h>
+#include <syscalls/motor.h>
 
 /** @} */
 

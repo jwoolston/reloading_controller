@@ -18,6 +18,18 @@ module = MOTOR
 module-str = motor
 source "subsys/logging/Kconfig.template.log_config"
 
+config MOTOR_INIT_PRIORITY
+	int "Motor Controller init priority"
+	default 90
+	help
+	  Motor controller initialization priority.
+
+config MOTOR_SHELL
+	bool "Motor shell"
+	depends on SHELL
+	help
+	  Enable motor shell for testing.
+
 # zephyr-keep-sorted-start
 rsource "Kconfig.l298n"
 # zephyr-keep-sorted-stop

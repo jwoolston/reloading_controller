@@ -8,10 +8,10 @@
 &pinctrl {
 	uart0_default: uart0_default {
 		group1 {
-			pinmux = <UART0_TX_P16>;
+			pinmux = <UART0_TX_P0>;
 		};
 		group2 {
-			pinmux = <UART0_RX_P17>;
+			pinmux = <UART0_RX_P1>;
 			input-enable;
 		};
 	};
