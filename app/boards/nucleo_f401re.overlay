@@ -7,7 +7,9 @@
  */
 
 #include <st/f4/stm32f401r(d-e)tx-pinctrl.dtsi>
+#include <zephyr/dt-bindings/display/panel.h>
 #include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/pwm/pwm.h>
 #include <zephyr/dt-bindings/lvgl/lvgl.h>
 #include <zephyr/dt-bindings/spi/spi.h>
 
@@ -112,19 +114,18 @@
 	cs-gpios = <&gpiob 12 GPIO_ACTIVE_LOW>,
 			   <&gpiob 14 GPIO_ACTIVE_LOW>;
 
+	sdhc0: sdhc@1 {
+		compatible = "zephyr,sdhc-spi-slot";
+		reg = <1>;
+		status = "okay";
+		spi-max-frequency = <23000000>;
 
-
-		/*sdhc0: sdhc@1 {
-			compatible = "zephyr,sdhc-spi-slot";
-			reg = <1>;
+		mmc {
+			compatible = "zephyr,sdmmc-disk";
+			disk-name = "SD";
 			status = "okay";
-			spi-max-frequency = <23000000>;
-			mmc {
-				compatible = "zephyr,sdmmc-disk";
-				disk-name = "SD";
-				status = "okay";
-			};
-		};*/
+		};
+	};
 };
 
 &i2c3 {
