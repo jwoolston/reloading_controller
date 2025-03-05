@@ -18,5 +18,7 @@ manifest:
         # strictly needed by the application.
         name-allowlist:
           - cmsis        # required by the ARM port
+          - fatfs       # required for FatFS support
+          - hal_stm32   # required by the STM32 boards
           - hal_rpi_pico # required by the RPI Pico boards
           - lvgl

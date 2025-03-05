@@ -1,0 +1,174 @@
+/*
+ * Copyright (c) 2022 STMicroelectronics
+ *
+ * SPDX-License-Identifier: Apache-2.0
+ *
+ * Application overlay for creating quadrature decoder device instance
+ */
+
+#include <st/f4/stm32f401r(d-e)tx-pinctrl.dtsi>
+#include <zephyr/dt-bindings/input/input-event-codes.h>
+#include <zephyr/dt-bindings/lvgl/lvgl.h>
+#include <zephyr/dt-bindings/spi/spi.h>
+
+/ {
+	chosen {
+		zephyr,console = &usart1;
+		zephyr,shell-uart = &usart1;
+		zephyr,display = &st7796s;
+	};
+
+	aliases {
+		qdec0 = &qdec;
+		//motor0 = &motor_l298n;
+	};
+
+	lvgl_encoder {
+		compatible = "zephyr,lvgl-encoder-input";
+		rotation-input-code = <INPUT_REL_WHEEL>;
+		button-input-code = <INPUT_KEY_0>;
+	};
+
+	/*pointer {
+		compatible = "zephyr,lvgl-pointer-input";
+		input = <&stmpe811>;
+		invert-y;
+	};*/
+
+	/*motors: motor {
+		compatible = "motor-l298n";
+		pwms = <&motor_pwm 1 PWM_MSEC(20) PWM_POLARITY_NORMAL>, // tim2_ch1_pa0
+			   <&motor_pwm 2 PWM_MSEC(20) PWM_POLARITY_NORMAL>; // tim2_ch2_pa1
+		ch-1-dir-gpios = <&gpio0 18 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+		ch-2-dir-gpios = <&gpio0 26 (GPIO_ACTIVE_LOW | GPIO_PULL_UP)>;
+	};*/
+
+	mipi_dbi {
+		compatible = "zephyr,mipi-dbi-spi";
+		spi-dev = <&spi2>;
+		dc-gpios = <&gpioa 12 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpioa 11 GPIO_ACTIVE_LOW>;
+		//write-only;
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		st7796s: st7796s@0 {
+			compatible = "sitronix,st7796s";
+			status = "okay";
+			reg = <0>;
+			mipi-max-frequency = <23000000>;
+			duplex = <SPI_FULL_DUPLEX>;
+			height = <320>;
+			width = <480>;
+			//invert-mode = "1-dot";
+			//frmctl1 = [80 10];
+			//bpc = [1F 50 00 20];
+			//dfc = [8A 07 3B];
+			//pwr1 = [80 64];
+			//pwr2 = <0x13>;
+			//pwr3 = <0xA7>;
+			//vcmpctl = <0x09>;
+			//doca = [40 8A 00 00 29 19 A5 38];
+			pgc = [F0 06 0B 07 06 05 2E 33 47 3A 17 16 2E 31];
+			ngc = [F0 09 0D 09 08 23 2E 33 46 38 13 13 2C 32];
+			madctl = <0x28>;
+		};
+	};
+};
+
+&leds {
+	status = "okay";
+};
+
+&usart1 {
+	status = "okay";
+};
+
+&adc1 {
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	brass_signal: channel@a {
+		reg = <10>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+
+	bullet_signal: channel@b {
+		reg = <11>;
+		zephyr,gain = "ADC_GAIN_1";
+		zephyr,reference = "ADC_REF_INTERNAL";
+		zephyr,acquisition-time = <ADC_ACQ_TIME_DEFAULT>;
+		zephyr,resolution = <12>;
+	};
+};
+
+&spi2 {
+	pinctrl-0 = <&spi2_sck_pb10 &spi2_miso_pc2 &spi2_mosi_pc3>;
+	pinctrl-names = "default";
+	status = "okay";
+	cs-gpios = <&gpiob 12 GPIO_ACTIVE_LOW>,
+			   <&gpiob 14 GPIO_ACTIVE_LOW>;
+
+
+
+		/*sdhc0: sdhc@1 {
+			compatible = "zephyr,sdhc-spi-slot";
+			reg = <1>;
+			status = "okay";
+			spi-max-frequency = <23000000>;
+			mmc {
+				compatible = "zephyr,sdmmc-disk";
+				disk-name = "SD";
+				status = "okay";
+			};
+		};*/
+};
+
+&i2c3 {
+	pinctrl-0 = <&i2c3_scl_pa8 &i2c3_sda_pc9>;
+	pinctrl-names = "default";
+	status = "okay";
+	clock-frequency = <I2C_BITRATE_FAST>;
+};
+
+&timers2 {
+	status = "okay";
+
+	motor_pwm: pwm {
+		status = "okay";
+		pinctrl-0 = <&tim2_ch1_pa0 &tim2_ch2_pa1>;
+		pinctrl-names = "default";
+	};
+};
+
+&timers3 {
+	status = "okay";
+
+	qdec: qdec {
+		status = "okay";
+		pinctrl-0 = <&tim3_ch1_pa6 &tim3_ch2_pa7>;
+		pinctrl-names = "default";
+		st,input-polarity-inverted;
+		st,input-filter-level = <FDIV32_N8>;
+		st,counts-per-revolution = <20>;
+	};
+};
+
+&i2c1 {
+	status = "disabled";
+};
+
+&i2c2 {
+	status = "disabled";
+};
+
+&spi1 {
+	status = "disabled";
+};
+
+&spi3 {
+	status = "disabled";
+};
