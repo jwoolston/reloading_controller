@@ -11,4 +11,4 @@ project(app LANGUAGES C)
 
 set(LVGL_DIR ${ZEPHYR_LVGL_MODULE_DIR})
 
-target_sources(app PRIVATE src/main.c)
+target_sources(app PRIVATE src/main.c src/gui.c src/gui.h)
