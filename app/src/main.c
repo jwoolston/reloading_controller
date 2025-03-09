@@ -13,6 +13,7 @@
 #include <zephyr/sys/util.h>
 #include <zephyr/drivers/display.h>
 #include <app/drivers/motor.h>
+
 /* <lvgl.h>
 #include <lvgl_mem.h>
 #include <lv_demos.h>*/
@@ -22,13 +23,13 @@
 LOG_MODULE_REGISTER(main, CONFIG_LOG_DEFAULT_LEVEL);
 
 /* The devicetree node identifier for the "green_led_2" alias. */
-#define LED0_NODE DT_ALIAS(green_led_2)
+#define LED0_NODE DT_ALIAS(led0)
 
 /*
  * A build error on this line means your board is unsupported.
  * See the sample documentation for information on how to fix this.
  */
-//static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
+static const struct gpio_dt_spec led = GPIO_DT_SPEC_GET(LED0_NODE, gpios);
 
 /*#if !DT_NODE_EXISTS(DT_PATH(zephyr_user)) || \
 !DT_NODE_HAS_PROP(DT_PATH(zephyr_user), io_channels)
@@ -45,16 +46,6 @@ ADC_DT_SPEC_GET_BY_IDX(node_id, idx),
 };*/
 
 //const struct device *qdec0 = DEVICE_DT_GET(DT_NODELABEL(pio1_qdec));
-
-//const struct device *motor = DEVICE_DT_GET(DT_NODELABEL(motor_l298n));
-
-//static uint32_t count;
-
-/*static void lv_btn_click_callback(lv_event_t* e) {
-    ARG_UNUSED(e);
-
-    count = 0;
-}*/
 
 enum corner {
     TOP_LEFT,
@@ -397,12 +388,36 @@ int main(void) {
     x = 0;
     y = capabilities.y_resolution - rect_h;
 
+    if (!gpio_is_ready_dt(&led)) {
+        return 0;
+    }
+
+    int ret = gpio_pin_configure_dt(&led, GPIO_OUTPUT_ACTIVE);
+    if (ret < 0) {
+        return 0;
+    }
+
+    const struct device *motor = DEVICE_DT_GET(DT_NODELABEL(motors));
+    if (!device_is_ready(motor)) {
+        LOG_ERR("Motor device not ready");
+        return 0;
+    }
+
+    /*LOG_INF("Turning motor off.");
+    ret = motor_off(motor);
+    motor_set_period_ms(motor, 0);
+    if (ret < 0) {
+        LOG_ERR("Could not turn off motors (%d)", ret);
+        return 0;
+    }*/
+
     LOG_INF("Display starts");
     while (1) {
-        LOG_INF("Display loop");
+        //LOG_INF("Display loop");
         fill_buffer_fnc(BOTTOM_LEFT, grey_count, buf, buf_size);
         display_write(display_dev, x, y, &buf_desc, buf);
         ++grey_count;
+        ret = gpio_pin_toggle_dt(&led);
         k_msleep(grey_scale_sleep);
     }
 

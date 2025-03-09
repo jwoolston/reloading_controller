@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2025 Jared Woolston
+ * Copyright (c) 2024 Nordic Semiconductor ASA
  * SPDX-License-Identifier: Apache-2.0
  */
 
@@ -10,17 +10,12 @@
 #include <zephyr/toolchain.h>
 
 /**
- * @defgroup drivers_motor Motor drivers
+ * @defgroup drivers_blink Motor drivers
  * @ingroup drivers
  * @{
  *
- * @brief A custom driver class to control DC motors
+ * @brief A custom Motor/H-Bridge driver class.
  *
- * This driver class provides a means to control DC motors via PWM with
- * optional direction control. Depending on configuration, the driver
- * can have no direction control, single pin or dual pin direction control.
- * In the case of dual direction control, braking options are additionally
- * enabled.
  */
 
 /**
@@ -29,26 +24,37 @@
  *
  * @brief Operations of the motor driver class.
  *
- * Each driver class typically provides a set of operations that need to be
- * implemented by each driver. These are used to implement the public API. If
- * support for system calls is needed, the operations structure must be tagged
- * with `__subsystem` and follow the `${class}_driver_api` naming scheme.
  */
 
 /** @brief Motor driver class operations */
-__subsystem struct motor_driver_api {
-	/**
-	 * @brief Configure the motor PWM period.
-	 *
-	 * @param dev Motor device instance.
-	 * @param period_ns Period of the motor PWM in nanoseconds, 0 to
-	 * disable drive.
-	 *
-	 * @retval 0 if successful.
-	 * @retval -EINVAL if @p period_ns can not be set.
-	 * @retval -errno Other negative errno code on failure.
-	 */
-	int (*set_period_ns)(const struct device *dev, unsigned int period_ns);
+__subsystem struct motor_driver_api
+{
+    /**
+     * @brief Configure the motor pwm period.
+         * NOTE: This will adjust the period of both channels, if present.
+     *
+     * @param dev Motor device instance.
+     * @param period_ms Period of the motor PWM in milliseconds, 0 to
+     * disable drive.
+     *
+     * @retval 0 if successful.
+     * @retval -EINVAL if @p period_ms can not be set.
+     * @retval -errno Other negative errno code on failure.
+     */
+    int (*set_period_ms)(const struct device* dev, unsigned int period_ms);
+
+    /**
+ * @brief Set the current motor speed (percentage of full speed).
+ * NOTE: This will adjust the speed of both channels, if present.
+ *
+ * @param dev Motor device instance.
+ * @param speed The motor speed (percentage of full speed). Valid range is [0-100].
+ *
+ * @retval 0 if successful.
+ * @retval -EINVAL if @p speed can not be set.
+ * @retval -errno Other negative errno code on failure.
+ */
+    int (*set_speed)(const struct device* dev, unsigned int speed);
 };
 
 /** @} */
@@ -59,47 +65,63 @@ __subsystem struct motor_driver_api {
  *
  * @brief Public API provided by the motor driver class.
  *
- * The public API is the interface that is used by applications to interact with
- * devices that implement the motor driver class. If support for system calls is
- * needed, functions accessing device fields need to be tagged with `__syscall`
- * and provide an implementation that follows the `z_impl_${function_name}`
- * naming scheme.
  */
 
 /**
- * @brief Configure the Motor PWM period.
- *
+ * @brief Configure the motor PWM period.
+ * NOTE: This will adjust the period of both channels, if present.
  *
  * @param dev Motor device instance.
- * @param period_ns Period of the motor PWM in nanoseconds.
+ * @param period_ms Period of the motor PWM in milliseconds.
  *
  * @retval 0 if successful.
- * @retval -EINVAL if @p period_ns can not be set.
+ * @retval -EINVAL if @p period_ms can not be set.
  * @retval -errno Other negative errno code on failure.
  */
-__syscall int motor_set_period_ns(const struct device *dev,
-				  unsigned int period_ns);
+__syscall int motor_set_period_ms(const struct device* dev,
+                                  unsigned int period_ms);
 
-static inline int z_impl_motor_set_period_ns(const struct device *dev,
-					     unsigned int period_ns)
+static inline int z_impl_motor_set_period_ms(const struct device* dev,
+                                             unsigned int period_ms)
 {
-	__ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
+    __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
 
-	return DEVICE_API_GET(motor, dev)->set_period_ns(dev, period_ns);
+    return DEVICE_API_GET(motor, dev)->set_period_ms(dev, period_ms);
 }
 
 /**
- * @brief Turn Motor drive off.
+ * @brief Set the current motor speed (percentage of full speed).
+ * NOTE: This will adjust the speed of both channels, if present.
  *
- * This is a convenience function to turn off the motor.
+ * @param dev Motor device instance.
+ * @param speed The motor speed (percentage of full speed). Valid range is [0-100].
+ *
+ * @retval 0 if successful.
+ * @retval -EINVAL if @p speed can not be set.
+ * @retval -errno Other negative errno code on failure.
+ */
+__syscall int motor_set_speed(const struct device* dev, unsigned int speed);
+
+static inline int z_impl_motor_set_speed(const struct device* dev, unsigned int speed)
+{
+    __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
+
+    return DEVICE_API_GET(motor, dev)->set_speed(dev, speed);
+}
+
+/**
+ * @brief Turn all motor outputs off, without braking.
+ *
+ * This is a convenience function to turn off the motor outputs. No
+ * braking action will be applied.
  *
  * @param dev Motor device instance.
  *
- * @return See motor_set_period_ns().
+ * @return See motor_set_period_ms().
  */
-static inline int motor_off(const struct device *dev)
+static inline int motor_off(const struct device* dev)
 {
-	return motor_set_period_ns(dev, 0);
+    return motor_set_period_ms(dev, 0);
 }
 
 #include <syscalls/motor.h>
@@ -108,4 +130,4 @@ static inline int motor_off(const struct device *dev)
 
 /** @} */
 
-#endif /* APP_DRIVERS_BLINK_H_ */
+#endif /* APP_DRIVERS_MOTOR_H_ */

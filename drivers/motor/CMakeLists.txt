@@ -3,3 +3,4 @@
 
 zephyr_library()
 zephyr_library_sources_ifdef(CONFIG_MOTOR_L298N motor_l298n.c)
+zephyr_library_sources_ifdef(CONFIG_MOTOR_SHELL motor_shell.c)

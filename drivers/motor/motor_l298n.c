@@ -45,29 +45,39 @@ struct motor_l298n_data {
     struct motor_l298n_channel_state ch2; // If NULL, this channel is not enabled
 };
 
-static int motor_l298n_set_period_ns(const struct device *dev, unsigned int period_ns) {
+static int motor_l298n_set_period_ms(const struct device *dev, unsigned int period_ms) {
     const struct motor_l298n_config *config = dev->config;
     struct motor_l298n_data *data = dev->data;
 
-    LOG_DBG("Setting motor period to : %u", period_ns);
+    LOG_DBG("Setting motor period to : %u", period_ms);
 
     /*int ret = 0;
     if (config->ch1 != NULL) {
-        uint64_t pulse_ns;
-        ret = pwm_cycles_to_nsec(config->ch1->enable_pin.dev, config->ch1->enable_pin.channel,
-                                 data->ch1.pulse_width, &pulse_ns);
+        uint64_t pulse_ms;
+        ret = pwm_cycles_to_msec(config->ch1->enable_pin.dev, config->ch1->enable_pin.channel,
+                                 data->ch1.pulse_width, &pulse_ms);
         if (ret < 0) {
-            LOG_ERR("pwm_cycles_to_nsec failed (%d)", ret);
+            LOG_ERR("pwm_cycles_to_msec failed (%d)", ret);
             return ret;
         }
-        pwm_set_dt(&config->ch1->enable_pin, period_ns, (uint32_t) pulse_ns);
+        pwm_set_dt(&config->ch1->enable_pin, period_ms, (uint32_t) pulse_ms);
     }*/
 
     return 0;
 }
 
+static int motor_l298n_set_speed(const struct device *dev, unsigned int speed) {
+    const struct motor_l298n_config *config = dev->config;
+    struct motor_l298n_data *data = dev->data;
+
+    LOG_DBG("Setting motor speed to : %u", speed);
+
+    return 0;
+}
+
 static DEVICE_API(motor, motor_api) = {
-    .set_period_ns = &motor_l298n_set_period_ns,
+    .set_period_ms = &motor_l298n_set_period_ms,
+    .set_speed = &motor_l298n_set_speed,
 };
 
 static int motor_l298n_init(const struct device *dev)
@@ -91,10 +101,10 @@ static int motor_l298n_init(const struct device *dev)
 #define MOTOR_L298N_CONFIGURE_CHANNEL(idx, channel)                                 \
     COND_CODE_1(DT_INST_PROP_HAS_IDX(idx, pwms, channel),                           \
     ({                                                                              \
-        .enable_pin = PWM_DT_SPEC_INST_GET_BY_IDX_OR(idx, channel, NULL),           \
+        .enable_pin = PWM_DT_SPEC_INST_GET_BY_IDX_OR(idx, channel, {}),             \
         .dir_pins = {                                                               \
-            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 0, NULL),\
-            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 1, NULL) \
+            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 0, {}),  \
+            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 1, {})   \
         }                                                                           \
     }), NULL)                                                                       \
 
