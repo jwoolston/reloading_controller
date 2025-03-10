@@ -14,7 +14,7 @@
 #include <zephyr/drivers/display.h>
 #include <app/drivers/motor.h>
 
-#include "gui.h"
+//#include "gui.h"
 #include <lvgl.h>
 
 #include <zephyr/logging/log.h>
@@ -45,19 +45,6 @@ ADC_DT_SPEC_GET_BY_IDX(node_id, idx),
 };*/
 
 int main(void) {
-    const struct device* display_dev;
-    struct display_capabilities capabilities;
-
-    LOG_INF("Getting display");
-    display_dev = DEVICE_DT_GET(DT_CHOSEN(zephyr_display));
-    if (!device_is_ready(display_dev)) {
-        LOG_ERR("Device %s not found. Aborting sample.",
-                display_dev->name);
-        return 0;
-    }
-
-    LOG_INF("Display sample for %s", display_dev->name);
-    display_get_capabilities(display_dev, &capabilities);
 
     if (!gpio_is_ready_dt(&led)) {
         return 0;
@@ -83,13 +70,13 @@ int main(void) {
     }*/
 
     LOG_INF("Display starts");
-    reloading_gui();
+    //reloading_gui();
 
     //test_gui(display_dev);
 
     while (1) {
         //LOG_INF("Hello World!");
-        test_gui_loop();
+        //reloading_gui_loop_handler();
         ret = gpio_pin_toggle_dt(&led);
         k_sleep(K_MSEC(100));
         //LOG_INF("ADC reading[%u]:\n", count++);

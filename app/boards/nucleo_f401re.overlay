@@ -38,7 +38,7 @@
 	pointer {
 		compatible = "zephyr,lvgl-pointer-input";
 		input = <&ft6336>;
-		invert-y;
+		//invert-y;
 	};
 
 	motors: motor {
@@ -61,7 +61,7 @@
 			compatible = "sitronix,st7796s";
 			status = "okay";
 			reg = <0>;
-			mipi-max-frequency = <23000000>;
+			mipi-max-frequency = <48000000>;
 			duplex = <SPI_FULL_DUPLEX>;
 			height = <320>;
 			width = <480>;
@@ -140,8 +140,8 @@
 	ft6336: ft6336@38 {
 		compatible = "focaltech,ft5336";
 		reg = <0x38>;
-		int-gpios = <&gpiob 9 0>;
-		reset-gpios = <&gpiob 8 0>;
+		int-gpios = <&gpiob 9 GPIO_ACTIVE_HIGH>;
+		reset-gpios = <&gpiob 8 GPIO_ACTIVE_LOW>;
 	};
 };
 
