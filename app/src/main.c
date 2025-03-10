@@ -61,14 +61,6 @@ int main(void) {
         return 0;
     }
 
-    /*LOG_INF("Turning motor off.");
-    ret = motor_off(motor);
-    motor_set_period_ms(motor, 0);
-    if (ret < 0) {
-        LOG_ERR("Could not turn off motors (%d)", ret);
-        return 0;
-    }*/
-
     LOG_INF("Display starts");
     //reloading_gui();
 

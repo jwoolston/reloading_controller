@@ -29,6 +29,24 @@ static const struct args_index args_indx = {
     .flags = 5,
 };
 
+static int cmd_channel_count(const struct shell *sh, size_t argc, char **argv) {
+    const struct device *dev;
+
+    dev = shell_device_get_binding(argv[args_indx.device]);
+    if (!dev) {
+        shell_error(sh, "Motor device not found");
+        return -EINVAL;
+    }
+
+    int retval = motor_get_channel_count(dev);
+    if (retval < 0) {
+        shell_error(sh, "Failed to get motor channel count (err %d)", retval);
+        return retval;
+    }
+    shell_print(sh, "Motor channel count: %d", retval);
+    return 0;
+}
+
 static int cmd_speed(const struct shell *sh, size_t argc, char **argv)
 {
     /*pwm_flags_t flags = 0;
@@ -79,8 +97,8 @@ static void device_name_get(size_t idx, struct shell_static_entry *entry)
 SHELL_DYNAMIC_CMD_CREATE(dsub_device_name, device_name_get);
 
 SHELL_STATIC_SUBCMD_SET_CREATE(motor_cmds,
-        SHELL_CMD_ARG(nsec, &dsub_device_name, "<device> <channel> <period in nsec> "
-                      "<pulse width in nsec> [flags]", cmd_speed, 5, 1),
+        SHELL_CMD_ARG(count, &dsub_device_name, "<device>", cmd_channel_count, 2, 0),
+        SHELL_CMD_ARG(speed, &dsub_device_name, "<device> <channel> <speed in %> [flags]", cmd_speed, 5, 1),
         SHELL_SUBCMD_SET_END
 );
 

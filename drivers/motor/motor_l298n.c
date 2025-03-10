@@ -28,9 +28,9 @@ struct motor_l298n_channel {
 };
 
 struct motor_l298n_channel_state {
-    bool enabled; // Will default to false
-    bool forward; // Will default to true
-    uint32_t pulse_width; // 100% on when this value is equal to the device
+    bool enabled;                  // Will default to false
+    enum MotorDirection direction; // Will default to FORWARD
+    uint32_t pulse_width;          // 100% on when this value is equal to the device
     // tree configured period
 };
 
@@ -45,9 +45,14 @@ struct motor_l298n_data {
     struct motor_l298n_channel_state ch2; // If NULL, this channel is not enabled
 };
 
-static int motor_l298n_set_period_ms(const struct device *dev, unsigned int period_ms) {
-    const struct motor_l298n_config *config = dev->config;
-    struct motor_l298n_data *data = dev->data;
+static int motor_l298n_get_channel_count(const struct device *dev) {
+    //LOG_DBG("get_channel_count() called.");
+    return 2; //TODO(jwoolston): Make this dynamic
+}
+
+static int motor_l298n_set_period_ms(const struct device* dev, unsigned int period_ms) {
+    const struct motor_l298n_config* config = dev->config;
+    struct motor_l298n_data* data = dev->data;
 
     LOG_DBG("Setting motor period to : %u", period_ms);
 
@@ -66,26 +71,53 @@ static int motor_l298n_set_period_ms(const struct device *dev, unsigned int peri
     return 0;
 }
 
-static int motor_l298n_set_speed(const struct device *dev, unsigned int speed) {
-    const struct motor_l298n_config *config = dev->config;
-    struct motor_l298n_data *data = dev->data;
+static int motor_l298n_set_speed(const struct device* dev, unsigned int speed) {
+    const struct motor_l298n_config* config = dev->config;
+    struct motor_l298n_data* data = dev->data;
 
     LOG_DBG("Setting motor speed to : %u", speed);
 
     return 0;
 }
 
+static int motor_l298n_on(const struct device *dev, uint32_t led)
+{
+    LOG_DBG("Turning motor on");
+    //return motor_l298n_set_speed(dev, led, 100);
+    return 0;
+}
+
+static int motor_l298n_off(const struct device *dev, uint32_t led)
+{
+    LOG_DBG("Turning motor off");
+    //return motor_l298n_set_speed(dev, led, 0);
+    return 0;
+}
+
 static DEVICE_API(motor, motor_api) = {
+    .get_channel_count = &motor_l298n_get_channel_count,
     .set_period_ms = &motor_l298n_set_period_ms,
     .set_speed = &motor_l298n_set_speed,
 };
 
-static int motor_l298n_init(const struct device *dev)
-{
-    const struct motor_l298n_config *config = dev->config;
-    struct motor_l298n_data *data = dev->data;
+static int motor_l298n_init(const struct device* dev) {
+    const struct motor_l298n_config* config = dev->config;
+    struct motor_l298n_data* data = dev->data;
 
     LOG_DBG("Initializing L298N Motor Driver");
+
+    const struct pwm_dt_spec* pwm_ch1 = &config->ch1.enable_pin;
+    const struct pwm_dt_spec* pwm_ch2 = &config->ch2.enable_pin;
+
+    if (!device_is_ready(pwm_ch1->dev)) {
+        LOG_ERR("%s: pwm device not ready", pwm_ch1->dev->name);
+        return -ENODEV;
+    }
+
+    if (!device_is_ready(pwm_ch2->dev)) {
+        LOG_ERR("%s: pwm device not ready", pwm_ch2->dev->name);
+        return -ENODEV;
+    }
 
     return 0;
 }
@@ -106,8 +138,7 @@ static int motor_l298n_init(const struct device *dev)
             GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 0, {}),  \
             GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 1, {})   \
         }                                                                           \
-    }), NULL)                                                                       \
-
+    }), NULL)
 #define MOTOR_L298N_INIT(idx)						            \
         static const struct motor_l298n_config motor_l298n##idx##_config = {        \
             .ch1 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 0),                           \
@@ -117,18 +148,18 @@ static int motor_l298n_init(const struct device *dev)
         static struct motor_l298n_data motor_l298n##idx##_data = {                  \
             .ch1 = {                                                                \
                 .enabled = false,                                                   \
-                .forward = true,                                                    \
+                .direction = FORWARD,                                               \
                 .pulse_width = 0                                                    \
             },                                                                      \
             .ch2 = {                                                                \
                 .enabled = false,                                                   \
-                .forward = true,                                                    \
+                .direction = FORWARD,                                               \
                 .pulse_width = 0                                                    \
             }                                                                       \
         };                                                                          \
                                                                                     \
         DEVICE_DT_INST_DEFINE(idx, motor_l298n_init, NULL,                          \
                               &motor_l298n##idx##_data, &motor_l298n##idx##_config, \
-                              POST_KERNEL, CONFIG_MOTOR_INIT_PRIORITY, NULL);
+                              POST_KERNEL, CONFIG_MOTOR_INIT_PRIORITY, &motor_api);
 
 DT_INST_FOREACH_STATUS_OKAY(MOTOR_L298N_INIT)
