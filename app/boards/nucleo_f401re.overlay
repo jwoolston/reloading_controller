@@ -143,6 +143,12 @@
 		int-gpios = <&gpiob 9 GPIO_ACTIVE_HIGH>;
 		reset-gpios = <&gpiob 8 GPIO_ACTIVE_LOW>;
 	};
+
+	vl53l0x@29 {
+		compatible = "st,vl53l0x";
+		reg = <0x29>;
+		xshut-gpios = <&gpioc 4 GPIO_ACTIVE_LOW>;
+	};
 };
 
 &timers2 {
