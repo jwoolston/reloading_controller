@@ -45,32 +45,11 @@ struct motor_l298n_data {
     struct motor_l298n_channel_state ch1; // If NULL, this channel is not enabled
 };
 
-static int motor_l298n_get_channel_count(const struct device *dev) {
+static int motor_l298n_get_channel_count(const struct device* dev) {
     return 2; //TODO(jwoolston): Make this dynamic
 }
 
-static int motor_l298n_set_period_ms(const struct device* dev, unsigned int period_ms) {
-    const struct motor_l298n_config* config = dev->config;
-    struct motor_l298n_data* data = dev->data;
-
-    LOG_DBG("Setting motor period to : %u", period_ms);
-
-    /*int ret = 0;
-    if (config->ch0 != NULL) {
-        uint64_t pulse_ms;
-        ret = pwm_cycles_to_msec(config->ch0->enable_pin.dev, config->ch0->enable_pin.channel,
-                                 data->ch0.pulse_width, &pulse_ms);
-        if (ret < 0) {
-            LOG_ERR("pwm_cycles_to_msec failed (%d)", ret);
-            return ret;
-        }
-        pwm_set_dt(&config->ch0->enable_pin, period_ms, (uint32_t) pulse_ms);
-    }*/
-
-    return 0;
-}
-
-static int motor_l298n_set_speed(const struct device* dev, unsigned int channel, unsigned int speed) {
+static int motor_l298n_channel_set_speed(const struct device* dev, const unsigned int channel, const unsigned int speed) {
     const struct motor_l298n_config* config = dev->config;
     struct motor_l298n_data* data = dev->data;
 
@@ -78,38 +57,160 @@ static int motor_l298n_set_speed(const struct device* dev, unsigned int channel,
     switch (channel) {
         case 0:
             data->ch0.pulse_width = (speed / 100.0f) * config->ch0.enable_pin.period;
-            pwm_set_pulse_dt(&config->ch0.enable_pin, data->ch0.pulse_width);
-            break;
+            if (data->ch0.enabled) {
+                return pwm_set_pulse_dt(&config->ch0.enable_pin, data->ch0.pulse_width);
+            }
+            return 0;
         case 1:
             data->ch1.pulse_width = (speed / 100.0f) * config->ch1.enable_pin.period;
-            pwm_set_pulse_dt(&config->ch1.enable_pin, data->ch1.pulse_width);
+            if (data->ch1.enabled) {
+                return pwm_set_pulse_dt(&config->ch1.enable_pin, data->ch1.pulse_width);
+            }
+            return 0;
+        default:
+            LOG_ERR("Invalid motor channel %u", channel);
+            return -EINVAL;
+    }
+}
+
+static int motor_l298n_channel_on(const struct device* dev, const uint32_t channel) {
+    const struct motor_l298n_config* config = dev->config;
+    struct motor_l298n_data* data = dev->data;
+
+    LOG_DBG("Turning motor channel %d on", channel);
+    switch (channel) {
+        case 0:
+            data->ch0.enabled = true;
+            return pwm_set_pulse_dt(&config->ch0.enable_pin, data->ch0.pulse_width);
+        case 1:
+            data->ch1.enabled = true;
+            return pwm_set_pulse_dt(&config->ch1.enable_pin, data->ch1.pulse_width);
+        default:
+            LOG_ERR("Invalid motor channel %u", channel);
+            return -EINVAL;
+    }
+}
+
+static int motor_l298n_channel_off(const struct device* dev, const uint32_t channel) {
+    const struct motor_l298n_config* config = dev->config;
+    struct motor_l298n_data* data = dev->data;
+
+    LOG_DBG("Turning motor channel %d off", channel);
+    switch (channel) {
+        case 0:
+            data->ch0.enabled = false;
+            return pwm_set_pulse_dt(&config->ch0.enable_pin, 0);
+        case 1:
+            data->ch1.enabled = false;
+            return pwm_set_pulse_dt(&config->ch1.enable_pin, 0);
+        default:
+            LOG_ERR("Invalid motor channel %u", channel);
+            return -EINVAL;
+    }
+}
+
+static int motor_l298n_channel_set_direction(const struct device* dev, const unsigned int channel,
+                                             const enum MotorDirection direction) {
+    const struct motor_l298n_config* config = dev->config;
+    struct motor_l298n_data* data = dev->data;
+
+    const struct gpio_dt_spec* dira;
+    const struct gpio_dt_spec* dirb;
+    switch (channel) {
+        case 0:
+            data->ch0.direction = direction;
+            dira = &config->ch0.dir_pins[0];
+            dirb = &config->ch0.dir_pins[1];
+            break;
+        case 1:
+            data->ch1.direction = direction;
+            dira = &config->ch1.dir_pins[0];
+            dirb = &config->ch1.dir_pins[1];
             break;
         default:
             LOG_ERR("Invalid motor channel %u", channel);
             return -EINVAL;
     }
-    return 0;
-}
 
-static int motor_l298n_on(const struct device *dev, uint32_t led)
-{
-    LOG_DBG("Turning motor on");
-    //return motor_l298n_set_speed(dev, led, 100);
-    return 0;
-}
+    int dira_retval = 0;
+    int dirb_retval = 0;
+    switch (direction) {
+        case FORWARD:
+            dira_retval = gpio_pin_set_dt(dira, 0);
+            dirb_retval = gpio_pin_set_dt(dirb, 1);
+            break;
+        case REVERSE:
+            dira_retval = gpio_pin_set_dt(dira, 1);
+            dirb_retval = gpio_pin_set_dt(dirb, 0);
+            break;
+        case BRAKE:
+            dira_retval = gpio_pin_set_dt(dira, 1);
+            dirb_retval = gpio_pin_set_dt(dirb, 1);
+            break;
+        case FREEWHEEL:
+            dira_retval = gpio_pin_set_dt(dira, 0);
+            dirb_retval = gpio_pin_set_dt(dirb, 0);
+            break;
+    }
 
-static int motor_l298n_off(const struct device *dev, uint32_t led)
-{
-    LOG_DBG("Turning motor off");
-    //return motor_l298n_set_speed(dev, led, 0);
+    if (dira_retval < 0) {
+        LOG_ERR("Channel %d failed to set direction. DIRA (err: %d)", channel, dira_retval);
+        return dira_retval;
+    }
+    if (dirb_retval < 0) {
+        LOG_ERR("Channel %d failed to set direction. DIRB (err: %d)", channel, dirb_retval);
+        return dirb_retval;
+    }
     return 0;
 }
 
 static DEVICE_API(motor, motor_api) = {
     .get_channel_count = &motor_l298n_get_channel_count,
-    .set_period_ms = &motor_l298n_set_period_ms,
-    .set_speed = &motor_l298n_set_speed,
+    .set_speed = &motor_l298n_channel_set_speed,
+    .motor_on = &motor_l298n_channel_on,
+    .motor_off = &motor_l298n_channel_off,
+    .set_direction = &motor_l298n_channel_set_direction,
 };
+
+static int motor_l298n_init_channel(const struct device* dev, const struct motor_l298n_channel* channel,
+                                    const unsigned int channel_num) {
+    const struct pwm_dt_spec* pwm = &channel->enable_pin;
+    const struct gpio_dt_spec* dira = &channel->dir_pins[0];
+    const struct gpio_dt_spec* dirb = &channel->dir_pins[1];
+
+    if (!device_is_ready(pwm->dev)) {
+        LOG_ERR("Channel %d: %s pwm device not ready", channel_num, pwm->dev->name);
+        return -ENODEV;
+    }
+
+    int retval = motor_l298n_channel_set_speed(dev, channel_num, 0);
+    if (retval) {
+        LOG_ERR("Failed to initialize motor channel %d speed", channel_num);
+        return retval;
+    }
+
+    if (!device_is_ready(dira->port)) {
+        LOG_ERR("Channel %d: DIR A device not ready", channel_num);
+        return -ENODEV;
+    }
+    retval = gpio_pin_configure_dt(dira, GPIO_OUTPUT_INACTIVE);
+    if (retval) {
+        LOG_ERR("Failed to initialize motor channel %d DIR A GPIO", channel_num, retval);
+        return retval;
+    }
+
+    if (!device_is_ready(dirb->port)) {
+        LOG_ERR("Channel %d: DIR B device not ready", channel_num);
+        return -ENODEV;
+    }
+    retval = gpio_pin_configure_dt(dirb, GPIO_OUTPUT_INACTIVE);
+    if (retval) {
+        LOG_ERR("Failed to initialize motor channel %d DIR B GPIO", channel_num, retval);
+        return retval;
+    }
+
+    return 0;
+}
 
 static int motor_l298n_init(const struct device* dev) {
     const struct motor_l298n_config* config = dev->config;
@@ -117,17 +218,16 @@ static int motor_l298n_init(const struct device* dev) {
 
     LOG_DBG("Initializing L298N Motor Driver");
 
-    const struct pwm_dt_spec* pwm_ch0 = &config->ch0.enable_pin;
-    const struct pwm_dt_spec* pwm_ch1 = &config->ch1.enable_pin;
-
-    if (!device_is_ready(pwm_ch0->dev)) {
-        LOG_ERR("%s: pwm device not ready", pwm_ch0->dev->name);
-        return -ENODEV;
+    int retval = motor_l298n_init_channel(dev, &config->ch0, 0);
+    if (retval) {
+        LOG_ERR("Failed to initialize L298N Motor Driver for channel 0");
+        return retval;
     }
 
-    if (!device_is_ready(pwm_ch1->dev)) {
-        LOG_ERR("%s: pwm device not ready", pwm_ch1->dev->name);
-        return -ENODEV;
+    retval = motor_l298n_init_channel(dev, &config->ch1, 1);
+    if (retval) {
+        LOG_ERR("Failed to initialize L298N Motor Driver for channel 1");
+        return retval;
     }
 
     return 0;
@@ -142,14 +242,13 @@ static int motor_l298n_init(const struct device* dev) {
  * @return A configured motor_l298n_channel struct or NULL
  */
 #define MOTOR_L298N_CONFIGURE_CHANNEL(idx, channel)                                 \
-    COND_CODE_1(DT_INST_PROP_HAS_IDX(idx, pwms, channel),                           \
-    ({                                                                              \
-        .enable_pin = PWM_DT_SPEC_INST_GET_BY_IDX_OR(idx, channel, {}),             \
+    {                                                                               \
+        .enable_pin = PWM_DT_SPEC_INST_GET_BY_IDX(idx, channel),                    \
         .dir_pins = {                                                               \
-            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 0, {}),  \
-            GPIO_DT_SPEC_INST_GET_BY_IDX_OR(idx, ch_##channel##_dir_gpios, 1, {})   \
+            GPIO_DT_SPEC_INST_GET_BY_IDX(idx, ch_##channel##_dir_gpios, 0),         \
+            GPIO_DT_SPEC_INST_GET_BY_IDX(idx, ch_##channel##_dir_gpios, 1)          \
         }                                                                           \
-    }), NULL)
+    }
 #define MOTOR_L298N_INIT(idx)						            \
         static const struct motor_l298n_config motor_l298n##idx##_config = {        \
             .ch0 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 0),                           \

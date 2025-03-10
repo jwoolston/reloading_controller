@@ -7,9 +7,8 @@
 #define APP_DRIVERS_MOTOR_H_
 
 #include <zephyr/device.h>
-#include <zephyr/toolchain.h>
 
-enum MotorDirection { FORWARD = 0, REVERSE = 1 };
+enum MotorDirection { FORWARD = 0, REVERSE = 1, FREEWHEEL = 2, BRAKE = 3 };
 
 /**
  * @defgroup drivers_blink Motor drivers
@@ -39,21 +38,7 @@ __subsystem struct motor_driver_api
      * @retval The number of controlled channels, if successful.
      * @retval -errno Other negative errno code on failure.
      */
-    int (*get_channel_count)(const struct device *dev);
-
-    /**
-     * @brief Configure the motor pwm period.
-         * NOTE: This will adjust the period of both channels, if present.
-     *
-     * @param dev Motor device instance.
-     * @param period_ms Period of the motor PWM in milliseconds, 0 to
-     * disable drive.
-     *
-     * @retval 0 if successful.
-     * @retval -EINVAL if @p period_ms can not be set.
-     * @retval -errno Other negative errno code on failure.
-     */
-    int (*set_period_ms)(const struct device* dev, unsigned int period_ms);
+    int (*get_channel_count)(const struct device* dev);
 
     /**
      * @brief Set the current motor speed (percentage of full speed).
@@ -68,6 +53,12 @@ __subsystem struct motor_driver_api
      * @retval -errno Other negative errno code on failure.
      */
     int (*set_speed)(const struct device* dev, unsigned int channel, unsigned int speed);
+
+    int (*motor_on)(const struct device* dev, unsigned int channel);
+
+    int (*motor_off)(const struct device* dev, unsigned int channel);
+
+    int (*set_direction)(const struct device* dev, unsigned int channel, enum MotorDirection direction);
 };
 
 /** @} */
@@ -88,35 +79,13 @@ __subsystem struct motor_driver_api
  * @retval The number of controlled channels, if successful.
  * @retval -errno Other negative errno code on failure.
  */
-__syscall int motor_get_channel_count(const struct device *dev);
+__syscall int motor_get_channel_count(const struct device* dev);
 
 static inline int z_impl_motor_get_channel_count(const struct device* dev)
 {
     __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
 
     return DEVICE_API_GET(motor, dev)->get_channel_count(dev);
-}
-
-/**
- * @brief Configure the motor PWM period.
- * NOTE: This will adjust the period of both channels, if present.
- *
- * @param dev Motor device instance.
- * @param period_ms Period of the motor PWM in milliseconds.
- *
- * @retval 0 if successful.
- * @retval -EINVAL if @p period_ms can not be set.
- * @retval -errno Other negative errno code on failure.
- */
-__syscall int motor_set_period_ms(const struct device* dev,
-                                  unsigned int period_ms);
-
-static inline int z_impl_motor_set_period_ms(const struct device* dev,
-                                             unsigned int period_ms)
-{
-    __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
-
-    return DEVICE_API_GET(motor, dev)->set_period_ms(dev, period_ms);
 }
 
 /**
@@ -137,6 +106,34 @@ static inline int z_impl_motor_set_speed(const struct device* dev, unsigned int 
     __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
 
     return DEVICE_API_GET(motor, dev)->set_speed(dev, channel, speed);
+}
+
+__syscall int motor_on(const struct device* dev, unsigned int channel);
+
+static inline int z_impl_motor_on(const struct device* dev, unsigned int channel)
+{
+    __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
+
+    return DEVICE_API_GET(motor, dev)->motor_on(dev, channel);
+}
+
+__syscall int motor_off(const struct device* dev, unsigned int channel);
+
+static inline int z_impl_motor_off(const struct device* dev, unsigned int channel)
+{
+    __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
+
+    return DEVICE_API_GET(motor, dev)->motor_off(dev, channel);
+}
+
+__syscall int motor_set_direction(const struct device* dev, unsigned int channel, enum MotorDirection direction);
+
+static inline int z_impl_motor_set_direction(const struct device* dev, unsigned int channel,
+                                             enum MotorDirection direction)
+{
+    __ASSERT_NO_MSG(DEVICE_API_IS(motor, dev));
+
+    return DEVICE_API_GET(motor, dev)->set_direction(dev, channel, direction);
 }
 
 #include <syscalls/motor.h>
