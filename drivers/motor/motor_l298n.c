@@ -36,17 +36,16 @@ struct motor_l298n_channel_state {
 
 struct motor_l298n_config {
     //const struct device *motor_dev;
-    const struct motor_l298n_channel ch1;
-    const struct motor_l298n_channel ch2; // If NULL, this channel is not enabled
+    const struct motor_l298n_channel ch0;
+    const struct motor_l298n_channel ch1; // If NULL, this channel is not enabled
 };
 
 struct motor_l298n_data {
-    struct motor_l298n_channel_state ch1;
-    struct motor_l298n_channel_state ch2; // If NULL, this channel is not enabled
+    struct motor_l298n_channel_state ch0;
+    struct motor_l298n_channel_state ch1; // If NULL, this channel is not enabled
 };
 
 static int motor_l298n_get_channel_count(const struct device *dev) {
-    //LOG_DBG("get_channel_count() called.");
     return 2; //TODO(jwoolston): Make this dynamic
 }
 
@@ -57,26 +56,38 @@ static int motor_l298n_set_period_ms(const struct device* dev, unsigned int peri
     LOG_DBG("Setting motor period to : %u", period_ms);
 
     /*int ret = 0;
-    if (config->ch1 != NULL) {
+    if (config->ch0 != NULL) {
         uint64_t pulse_ms;
-        ret = pwm_cycles_to_msec(config->ch1->enable_pin.dev, config->ch1->enable_pin.channel,
-                                 data->ch1.pulse_width, &pulse_ms);
+        ret = pwm_cycles_to_msec(config->ch0->enable_pin.dev, config->ch0->enable_pin.channel,
+                                 data->ch0.pulse_width, &pulse_ms);
         if (ret < 0) {
             LOG_ERR("pwm_cycles_to_msec failed (%d)", ret);
             return ret;
         }
-        pwm_set_dt(&config->ch1->enable_pin, period_ms, (uint32_t) pulse_ms);
+        pwm_set_dt(&config->ch0->enable_pin, period_ms, (uint32_t) pulse_ms);
     }*/
 
     return 0;
 }
 
-static int motor_l298n_set_speed(const struct device* dev, unsigned int speed) {
+static int motor_l298n_set_speed(const struct device* dev, unsigned int channel, unsigned int speed) {
     const struct motor_l298n_config* config = dev->config;
     struct motor_l298n_data* data = dev->data;
 
-    LOG_DBG("Setting motor speed to : %u", speed);
-
+    LOG_DBG("Setting channel %u motor speed to : %u%%", channel, speed);
+    switch (channel) {
+        case 0:
+            data->ch0.pulse_width = (speed / 100.0f) * config->ch0.enable_pin.period;
+            pwm_set_pulse_dt(&config->ch0.enable_pin, data->ch0.pulse_width);
+            break;
+        case 1:
+            data->ch1.pulse_width = (speed / 100.0f) * config->ch1.enable_pin.period;
+            pwm_set_pulse_dt(&config->ch1.enable_pin, data->ch1.pulse_width);
+            break;
+        default:
+            LOG_ERR("Invalid motor channel %u", channel);
+            return -EINVAL;
+    }
     return 0;
 }
 
@@ -106,16 +117,16 @@ static int motor_l298n_init(const struct device* dev) {
 
     LOG_DBG("Initializing L298N Motor Driver");
 
+    const struct pwm_dt_spec* pwm_ch0 = &config->ch0.enable_pin;
     const struct pwm_dt_spec* pwm_ch1 = &config->ch1.enable_pin;
-    const struct pwm_dt_spec* pwm_ch2 = &config->ch2.enable_pin;
 
-    if (!device_is_ready(pwm_ch1->dev)) {
-        LOG_ERR("%s: pwm device not ready", pwm_ch1->dev->name);
+    if (!device_is_ready(pwm_ch0->dev)) {
+        LOG_ERR("%s: pwm device not ready", pwm_ch0->dev->name);
         return -ENODEV;
     }
 
-    if (!device_is_ready(pwm_ch2->dev)) {
-        LOG_ERR("%s: pwm device not ready", pwm_ch2->dev->name);
+    if (!device_is_ready(pwm_ch1->dev)) {
+        LOG_ERR("%s: pwm device not ready", pwm_ch1->dev->name);
         return -ENODEV;
     }
 
@@ -141,17 +152,17 @@ static int motor_l298n_init(const struct device* dev) {
     }), NULL)
 #define MOTOR_L298N_INIT(idx)						            \
         static const struct motor_l298n_config motor_l298n##idx##_config = {        \
-            .ch1 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 0),                           \
-            .ch2 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 1)                            \
+            .ch0 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 0),                           \
+            .ch1 = MOTOR_L298N_CONFIGURE_CHANNEL(idx, 1)                            \
         };								            \
                                                                                     \
         static struct motor_l298n_data motor_l298n##idx##_data = {                  \
-            .ch1 = {                                                                \
+            .ch0 = {                                                                \
                 .enabled = false,                                                   \
                 .direction = FORWARD,                                               \
                 .pulse_width = 0                                                    \
             },                                                                      \
-            .ch2 = {                                                                \
+            .ch1 = {                                                                \
                 .enabled = false,                                                   \
                 .direction = FORWARD,                                               \
                 .pulse_width = 0                                                    \

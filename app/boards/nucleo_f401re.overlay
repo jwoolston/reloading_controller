@@ -121,7 +121,7 @@
 		compatible = "zephyr,sdhc-spi-slot";
 		reg = <1>;
 		status = "okay";
-		spi-max-frequency = <23000000>;
+		spi-max-frequency = <24000000>;
 
 		mmc {
 			compatible = "zephyr,sdmmc-disk";

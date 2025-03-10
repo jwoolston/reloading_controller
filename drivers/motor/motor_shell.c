@@ -16,7 +16,7 @@
 struct args_index {
     uint8_t device;
     uint8_t channel;
-    uint8_t period;
+    uint8_t speed;
     uint8_t pulse;
     uint8_t flags;
 };
@@ -24,7 +24,7 @@ struct args_index {
 static const struct args_index args_indx = {
     .device = 1,
     .channel = 2,
-    .period = 3,
+    .speed = 3,
     .pulse = 4,
     .flags = 5,
 };
@@ -98,7 +98,7 @@ SHELL_DYNAMIC_CMD_CREATE(dsub_device_name, device_name_get);
 
 SHELL_STATIC_SUBCMD_SET_CREATE(motor_cmds,
         SHELL_CMD_ARG(count, &dsub_device_name, "<device>", cmd_channel_count, 2, 0),
-        SHELL_CMD_ARG(speed, &dsub_device_name, "<device> <channel> <speed in %> [flags]", cmd_speed, 5, 1),
+        SHELL_CMD_ARG(speed, &dsub_device_name, "<device> <channel> <speed in %>", cmd_speed, 4, 0),
         SHELL_SUBCMD_SET_END
 );
 
