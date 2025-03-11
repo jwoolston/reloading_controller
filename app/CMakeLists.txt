@@ -13,6 +13,8 @@ set(LVGL_DIR ${ZEPHYR_LVGL_MODULE_DIR})
 
 target_sources(app PRIVATE
         src/main.c
+        src/filesystem.c
+        src/filesystem.h
         src/gui.c
         src/gui.h
         src/gui/events_init.c
@@ -25,7 +27,6 @@ target_sources(app PRIVATE
         src/gui/setup_scr_splash_scr.c
         src/gui/widgets_init.c
         src/gui/widgets_init.h
-        src/gui/fonts/lv_font_montserratMedium_16.c
         src/gui/fonts/lv_font_Mostra_Nuova_24.c
         #src/gui/fonts/lv_font_Mostra_Nuova_32.c
         #src/gui/images/_AP_Logo_RGB565_480x320.c

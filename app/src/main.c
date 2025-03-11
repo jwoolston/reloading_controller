@@ -11,11 +11,9 @@
 #include <zephyr/drivers/gpio.h>
 #include <zephyr/drivers/pwm.h>
 #include <zephyr/sys/util.h>
-#include <zephyr/drivers/display.h>
 #include <app/drivers/motor.h>
 
-//#include "gui.h"
-#include <lvgl.h>
+#include "gui.h"
 
 #include <zephyr/logging/log.h>
 
@@ -62,13 +60,13 @@ int main(void) {
     }
 
     LOG_INF("Display starts");
-    //reloading_gui();
+    reloading_gui();
 
     //test_gui(display_dev);
 
     while (1) {
         //LOG_INF("Hello World!");
-        //reloading_gui_loop_handler();
+        reloading_gui_loop_handler();
         ret = gpio_pin_toggle_dt(&led);
         k_sleep(K_MSEC(100));
         //LOG_INF("ADC reading[%u]:\n", count++);
