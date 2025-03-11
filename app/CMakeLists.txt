@@ -17,6 +17,8 @@ target_sources(app PRIVATE
         src/filesystem.h
         src/gui.c
         src/gui.h
+        src/feeders/feeder_subsystem.c
+        src/feeders/feeder_subsystem.h
         src/gui/events_init.c
         src/gui/events_init.h
         src/gui/gui_guider.c
