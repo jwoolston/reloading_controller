@@ -8,12 +8,6 @@ menuconfig MOTOR
 
 if MOTOR
 
-config MOTOR_INIT_PRIORITY
-	int "Motor init priority"
-	default KERNEL_INIT_PRIORITY_DEVICE
-	help
-	  Motor driver device initialization priority.
-
 module = MOTOR
 module-str = motor
 source "subsys/logging/Kconfig.template.log_config"

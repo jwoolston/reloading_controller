@@ -14,4 +14,11 @@ module = APP
 module-str = APP
 source "subsys/logging/Kconfig.template.log_config"
 
+config FEEDER_FULL_SENSOR_THREAD_PRIORITY
+	int "Feeder full sensor ADC measurement thread priority."
+	default -1
+
+config FEEDER_FULL_SENSOR_THRESHOLD_MV
+    int "Threshold ADC mV reading which will trigger a transition in state of the feeder full sensor."
+    default 1000
 
