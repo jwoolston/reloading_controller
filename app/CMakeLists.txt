@@ -13,8 +13,9 @@ set(LVGL_DIR ${ZEPHYR_LVGL_MODULE_DIR})
 
 target_sources(app PRIVATE
         src/main.c
-        src/filesystem.c
-        src/filesystem.h
+        src/filesystem/filesystem.c
+        src/filesystem/filesystem.h
+        #src/filesystem/lv_fs_zephyr.c
         src/gui.c
         src/gui.h
         src/feeders/feeder_subsystem.c

@@ -13,6 +13,7 @@
 #include <zephyr/sys/util.h>
 
 #include "feeders/feeder_subsystem.h"
+#include "filesystem/filesystem.h"
 #include "gui.h"
 
 #include <zephyr/logging/log.h>
@@ -35,6 +36,9 @@ int main(void) {
         return ret;
     }
 
+    LOG_INF("Initializing Filesystem");
+    mount_filesystem();
+
     LOG_INF("Initializing GUI");
     ret = reloading_gui();
     if (ret) {
@@ -51,7 +55,7 @@ int main(void) {
 
     int loop_count = 0;
     while (1) {
-        reloading_gui_loop_handler();
+        //reloading_gui_loop_handler();
 
         if (loop_count == 10) {
             // Toggle heartbeat LED

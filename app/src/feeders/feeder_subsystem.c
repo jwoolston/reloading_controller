@@ -103,9 +103,9 @@ static int feeder_sensor_init(void*, void*, void*) {
             if (ret < 0 || adc_channels[i].vref_mv) {
                 LOG_ERR("Value in mV not available. Error: %d", ret);
             } else {
-                LOG_DBG("Channel %d reading: %d mV", i, sample_value);
+                //LOG_DBG("Channel %d reading: %d mV", i, sample_value);
                 if (sample_value > CONFIG_FEEDER_FULL_SENSOR_THRESHOLD_MV) {
-                    LOG_DBG("Channel %d is full", i);
+                    //LOG_DBG("Channel %d is full", i);
                     motor_off(motor_dev, i);
                 } else {
                     motor_on(motor_dev, i);
@@ -144,7 +144,7 @@ int start_feeder(const int feeder) {
     if (!is_valid_feeder(feeder)) {
         return -EINVAL;
     }
-    LOG_DBG("Starting feeder %d", feeder);
+    //LOG_DBG("Starting feeder %d", feeder);
     return motor_on(motor_dev, feeder);
 }
 
@@ -152,7 +152,7 @@ int stop_feeder(const int feeder) {
     if (!is_valid_feeder(feeder)) {
         return -EINVAL;
     }
-    LOG_DBG("Stopping feeder %d", feeder);
+    //LOG_DBG("Stopping feeder %d", feeder);
     return motor_off(motor_dev, feeder);
 }
 
