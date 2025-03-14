@@ -7,6 +7,7 @@
 #include <zephyr/storage/disk_access.h>
 #include <zephyr/logging/log.h>
 #include <zephyr/fs/fs.h>
+#include "lv_fs_zephyr_conf.h"
 
 #if defined(CONFIG_FAT_FILESYSTEM_ELM)
 
@@ -61,25 +62,6 @@ LOG_MODULE_REGISTER(filesystem, LOG_LEVEL_DBG);
 #define SOME_REQUIRED_LEN MAX(sizeof(SOME_FILE_NAME), sizeof(SOME_DIR_NAME))
 
 static const char *disk_mount_pt = DISK_MOUNT_PT;
-
-/*static int stdio_lsdir(const char *path) {
-    struct dirent *entry;
-    DIR *dp;
-
-    dp = opendir(path);
-    if (dp == NULL)
-    {
-        LOG_ERR("Failed to open dir: %s", path);
-        return -1;
-    }
-
-    while((entry = readdir(dp))) {
-        LOG_DBG(entry->d_name);
-    }
-
-    closedir(dp);
-    return 0;
-}*/
 
 /* List dir entry by path
  *
@@ -175,8 +157,13 @@ int mount_filesystem(void) {
 
     if (res == FS_RET_OK) {
         LOG_DBG("Disk mounted.");
+#ifdef CONFIG_LV_USE_FS_ZEPHYR
+        LOG_DBG("Initializing LVGL Zephyr FS driver.");
+        lv_fs_zephyr_init();
+#endif
     } else {
         LOG_ERR("Error mounting disk: %d", res);
+        return res;
     }
 
     lsdir(disk_mount_pt);

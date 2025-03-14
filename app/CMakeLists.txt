@@ -15,7 +15,8 @@ target_sources(app PRIVATE
         src/main.c
         src/filesystem/filesystem.c
         src/filesystem/filesystem.h
-        #src/filesystem/lv_fs_zephyr.c
+        src/filesystem/lv_fs_zephyr.c
+        src/filesystem/lv_fs_zephyr_conf.h
         src/gui.c
         src/gui.h
         src/feeders/feeder_subsystem.c

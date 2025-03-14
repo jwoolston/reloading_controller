@@ -195,7 +195,7 @@ static int motor_l298n_init_channel(const struct device* dev, const struct motor
     }
     retval = gpio_pin_configure_dt(dira, GPIO_OUTPUT_INACTIVE);
     if (retval) {
-        LOG_ERR("Failed to initialize motor channel %d DIR A GPIO", channel_num, retval);
+        LOG_ERR("Failed to initialize motor channel %d DIR A GPIO. Error: %d", channel_num, retval);
         return retval;
     }
 
@@ -205,7 +205,7 @@ static int motor_l298n_init_channel(const struct device* dev, const struct motor
     }
     retval = gpio_pin_configure_dt(dirb, GPIO_OUTPUT_INACTIVE);
     if (retval) {
-        LOG_ERR("Failed to initialize motor channel %d DIR B GPIO", channel_num, retval);
+        LOG_ERR("Failed to initialize motor channel %d DIR B GPIO. Error: %d", channel_num, retval);
         return retval;
     }
 
@@ -214,7 +214,6 @@ static int motor_l298n_init_channel(const struct device* dev, const struct motor
 
 static int motor_l298n_init(const struct device* dev) {
     const struct motor_l298n_config* config = dev->config;
-    struct motor_l298n_data* data = dev->data;
 
     LOG_DBG("Initializing L298N Motor Driver");
 
