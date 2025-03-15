@@ -1,0 +1,20 @@
+build/object/lv_glfw_window.o: \
+ c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\drivers\glfw\lv_glfw_window.c \
+ c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\drivers\glfw\lv_glfw_window_private.h \
+ c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\drivers\glfw\lv_glfw_window.h \
+ c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\lv_conf_internal.h \
+ c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\lv_conf_kconfig.h \
+ C:/NXP/GUI-Guider-Projects/reloading_controller/lvgl-simulator/lv_conf.h \
+ c:\nxp\gui-guider-projects\reloading_controller\custom\lv_conf_ext.h
+
+c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\drivers\glfw\lv_glfw_window_private.h:
+
+c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\drivers\glfw\lv_glfw_window.h:
+
+c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\lv_conf_internal.h:
+
+c:\nxp\gui-guider-projects\reloading_controller\lvgl\src\lv_conf_kconfig.h:
+
+C:/NXP/GUI-Guider-Projects/reloading_controller/lvgl-simulator/lv_conf.h:
+
+c:\nxp\gui-guider-projects\reloading_controller\custom\lv_conf_ext.h:

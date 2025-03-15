@@ -1,0 +1,1 @@
+GEN_CSRCS += lottie_running_gear_animation.c

@@ -1,0 +1,1 @@
+GEN_CSRCS += _AP_Logo_RGB565_480x320.c _settings_128dp_EFE8E4_RGB565_140x140.c _play_circle_outline_128dp_EFE8E4_RGB565_140x140.c _insights_128dp_EFE8E4_RGB565_140x140.c _warning_64dp_EFE8E4_RGB565_24x24.c
