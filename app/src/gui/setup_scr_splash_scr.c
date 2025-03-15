@@ -28,17 +28,18 @@ void setup_scr_splash_scr(lv_ui *ui)
     lv_obj_set_style_bg_grad_dir(ui->splash_scr, LV_GRAD_DIR_NONE, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes splash_scr_splash_logo
-    /*ui->splash_scr_splash_logo = lv_image_create(ui->splash_scr);
+    ui->splash_scr_splash_logo = lv_image_create(ui->splash_scr);
     lv_obj_set_pos(ui->splash_scr_splash_logo, 0, 0);
     lv_obj_set_size(ui->splash_scr_splash_logo, 480, 320);
     lv_obj_add_flag(ui->splash_scr_splash_logo, LV_OBJ_FLAG_CLICKABLE);
-    lv_image_set_src(ui->splash_scr_splash_logo, &_AP_Logo_RGB565_480x320);
+    //lv_image_set_src(ui->splash_scr_splash_logo, &_AP_Logo_RGB565_480x320);
+    lv_image_set_src(ui->splash_scr_splash_logo, "A:/ap_logo_min.png");
     lv_image_set_pivot(ui->splash_scr_splash_logo, 50,50);
     lv_image_set_rotation(ui->splash_scr_splash_logo, 0);
 
     //Write style for splash_scr_splash_logo, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
     lv_obj_set_style_image_recolor_opa(ui->splash_scr_splash_logo, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_image_opa(ui->splash_scr_splash_logo, 255, LV_PART_MAIN|LV_STATE_DEFAULT);*/
+    lv_obj_set_style_image_opa(ui->splash_scr_splash_logo, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //The custom code of splash_scr.
 

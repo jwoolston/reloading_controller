@@ -7,7 +7,7 @@
 
 #include <zephyr/logging/log.h>
 
-LOG_MODULE_REGISTER(feeders, CONFIG_APP_LOG_LEVEL);
+LOG_MODULE_REGISTER(feeders, CONFIG_FEEDER_SUBSYSTEM_LOG_LEVEL);
 
 #define INVALID_ADC_VALUE SHRT_MIN
 #define BUFFER_COUNT 2
@@ -133,7 +133,7 @@ int feeder_subsystem_init() {
     LOG_DBG("Starting feeder queue monitor thread.");
     adc_thread_tid = k_thread_create(&adc_thread_data, adc_thread_stack,
                                      K_THREAD_STACK_SIZEOF(adc_thread_stack),
-                                     feeder_sensor_init,
+                                     (k_thread_entry_t)feeder_sensor_init,
                                      NULL, NULL, NULL,
                                      CONFIG_FEEDER_FULL_SENSOR_THREAD_PRIORITY,
                                      K_ESSENTIAL | K_FP_REGS, K_NO_WAIT);

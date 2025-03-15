@@ -5,9 +5,11 @@
 #include <zephyr/kernel.h>
 #include <zephyr/device.h>
 #include <zephyr/storage/disk_access.h>
-#include <zephyr/logging/log.h>
 #include <zephyr/fs/fs.h>
 #include "lv_fs_zephyr_conf.h"
+
+#include <zephyr/logging/log.h>
+LOG_MODULE_REGISTER(filesystem, CONFIG_FILESYSTEM_SUBSYSTEM_LOG_LEVEL);
 
 #if defined(CONFIG_FAT_FILESYSTEM_ELM)
 
@@ -54,8 +56,6 @@ static struct fs_mount_t mp = {
 #define FS_RET_OK 0
 #endif
 
-LOG_MODULE_REGISTER(filesystem, LOG_LEVEL_DBG);
-
 #define MAX_PATH 128
 #define SOME_FILE_NAME "some.dat"
 #define SOME_DIR_NAME "some"
@@ -98,6 +98,14 @@ static int lsdir(const char *path)
 
         if (entry.type == FS_DIR_ENTRY_DIR) {
             LOG_DBG("[DIR ] %s", entry.name);
+            char new_path[MAX_PATH];
+            int base = strlen(path);
+            strncpy(new_path, path, sizeof(new_path));
+            new_path[base++] = '/';
+            new_path[base] = 0;
+            strcat(&new_path[base], entry.name);
+            LOG_DBG("[Attempting to list DIR ] %s", new_path);
+            lsdir(new_path);
         } else {
             LOG_DBG("[FILE] %s (size = %zu)", entry.name, entry.size);
         }
@@ -166,7 +174,7 @@ int mount_filesystem(void) {
         return res;
     }
 
-    lsdir(disk_mount_pt);
+    //lsdir(disk_mount_pt);
 
     return res;
 }

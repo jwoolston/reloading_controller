@@ -118,6 +118,7 @@ static void* lv_fs_zephyr_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t 
         LOG_ERR("Failed to allocate file handle");
         return NULL;
     }
+    LOG_DBG("Opening file '%s'", buf);
     if (fs_open(file, buf, flags)) {
         LOG_ERR("Failed to open file %s", buf);
         return NULL;
