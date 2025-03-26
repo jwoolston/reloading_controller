@@ -57,7 +57,7 @@ static void splash_scr_splash_logo_event_handler (lv_event_t *e)
 void events_init_splash_scr (lv_ui *ui)
 {
     lv_obj_add_event_cb(ui->splash_scr, splash_scr_event_handler, LV_EVENT_ALL, ui);
-    //lv_obj_add_event_cb(ui->splash_scr_splash_logo, splash_scr_splash_logo_event_handler, LV_EVENT_ALL, ui);
+    lv_obj_add_event_cb(ui->splash_scr_splash_logo, splash_scr_splash_logo_event_handler, LV_EVENT_ALL, ui);
 }
 
 static void home_scr_run_container_event_handler (lv_event_t *e)

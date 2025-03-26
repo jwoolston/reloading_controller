@@ -34,10 +34,6 @@ target_sources(app PRIVATE
         src/gui/fonts/lv_font_Mostra_Nuova_24.c
         #src/gui/fonts/lv_font_Mostra_Nuova_32.c
         #src/gui/images/_AP_Logo_RGB565_480x320.c
-        #src/gui/images/_insights_128dp_EFE8E4_RGB565_140x140.c
-        #src/gui/images/_play_circle_outline_128dp_EFE8E4_RGB565_140x140.c
-        #src/gui/images/_settings_128dp_EFE8E4_RGB565_140x140.c
-        #src/gui/images/_warning_64dp_EFE8E4_RGB565_24x24.c
         #src/gui/images/images_md5.json
         #src/gui/images/lottie_running_gear_animation.c
 )

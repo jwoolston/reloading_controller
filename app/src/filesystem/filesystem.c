@@ -175,6 +175,22 @@ int mount_filesystem(void) {
     }
 
     //lsdir(disk_mount_pt);
+    //lsdir("/SD:/image");
+    /*struct fs_file_t image;
+    fs_file_t_init(&image);
+    int ret = fs_open(&image, "/SD:/image/ap_logo_min.png", FS_O_READ);
+    if (ret) {
+        LOG_ERR("Error opening file: %d", ret);
+        return ret;
+    }
+    char buffer[512];
+    ret = fs_read(&image, &buffer, 24);
+    if (ret < 0) {
+        LOG_ERR("Error reading file: %d", ret);
+    } else {
+        LOG_HEXDUMP_INF(buffer, 24, "Logo Read");
+    }
+    fs_close(&image);*/
 
     return res;
 }

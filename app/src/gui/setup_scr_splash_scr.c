@@ -32,7 +32,6 @@ void setup_scr_splash_scr(lv_ui *ui)
     lv_obj_set_pos(ui->splash_scr_splash_logo, 0, 0);
     lv_obj_set_size(ui->splash_scr_splash_logo, 480, 320);
     lv_obj_add_flag(ui->splash_scr_splash_logo, LV_OBJ_FLAG_CLICKABLE);
-    //lv_image_set_src(ui->splash_scr_splash_logo, &_AP_Logo_RGB565_480x320);
     lv_image_set_src(ui->splash_scr_splash_logo, "A:/ap_logo_min.png");
     lv_image_set_pivot(ui->splash_scr_splash_logo, 50,50);
     lv_image_set_rotation(ui->splash_scr_splash_logo, 0);

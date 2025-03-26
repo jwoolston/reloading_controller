@@ -118,9 +118,11 @@ static void* lv_fs_zephyr_open(lv_fs_drv_t* drv, const char* path, lv_fs_mode_t 
         LOG_ERR("Failed to allocate file handle");
         return NULL;
     }
+    fs_file_t_init(file);
     LOG_DBG("Opening file '%s'", buf);
-    if (fs_open(file, buf, flags)) {
-        LOG_ERR("Failed to open file %s", buf);
+    int ret = fs_open(file, buf, flags);
+    if (ret < 0) {
+        LOG_ERR("Failed to open file %s", ret);
         return NULL;
     }
     return file;
@@ -157,7 +159,7 @@ static lv_fs_res_t lv_fs_zephyr_close(lv_fs_drv_t* drv, void* file_p) {
 static lv_fs_res_t lv_fs_zephyr_read(lv_fs_drv_t* drv, void* file_p, void* buf, uint32_t btr, uint32_t* br) {
     LV_UNUSED(drv);
     *br = fs_read(file_p, buf, btr);
-    if (*br) {
+    if (*br < 0) {
         LOG_ERR("Failed to read file. Error %d", *br);
     }
     return (int32_t)(*br) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;
@@ -175,7 +177,7 @@ static lv_fs_res_t lv_fs_zephyr_read(lv_fs_drv_t* drv, void* file_p, void* buf, 
 static lv_fs_res_t lv_fs_zephyr_write(lv_fs_drv_t* drv, void* file_p, const void* buf, uint32_t btw, uint32_t* bw) {
     LV_UNUSED(drv);
     *bw = fs_write(file_p, buf, btw);
-    if (*bw) {
+    if (*bw < 0) {
         LOG_ERR("Failed to write file. Error %d", *bw);
     }
     return (int32_t)(*bw) < 0 ? LV_FS_RES_UNKNOWN : LV_FS_RES_OK;

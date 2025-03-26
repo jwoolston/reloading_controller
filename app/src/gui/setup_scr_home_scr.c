@@ -93,18 +93,18 @@ void setup_scr_home_scr(lv_ui *ui)
     lv_obj_set_style_shadow_width(ui->home_scr_settings_label, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes home_scr_settings_icon
-    /*ui->home_scr_settings_icon = lv_image_create(ui->home_scr_settings_container);
+    ui->home_scr_settings_icon = lv_image_create(ui->home_scr_settings_container);
     lv_obj_set_pos(ui->home_scr_settings_icon, 0, 0);
     lv_obj_set_size(ui->home_scr_settings_icon, 140, 140);
     lv_obj_add_flag(ui->home_scr_settings_icon, LV_OBJ_FLAG_CLICKABLE);
-    lv_image_set_src(ui->home_scr_settings_icon, &_settings_128dp_EFE8E4_RGB565_140x140);
+    lv_image_set_src(ui->home_scr_settings_icon, "A:/settings_128dp_EFE8E4-min.png");
     lv_image_set_pivot(ui->home_scr_settings_icon, 50,50);
     lv_image_set_rotation(ui->home_scr_settings_icon, 0);
 
     //Write style for home_scr_settings_icon, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
     lv_obj_set_style_image_recolor_opa(ui->home_scr_settings_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
     lv_obj_set_style_image_recolor(ui->home_scr_settings_icon, lv_color_hex(0xefe8e4), LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_image_opa(ui->home_scr_settings_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);*/
+    lv_obj_set_style_image_opa(ui->home_scr_settings_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes home_scr_run_container
     ui->home_scr_run_container = lv_obj_create(ui->home_scr);
@@ -151,18 +151,18 @@ void setup_scr_home_scr(lv_ui *ui)
     lv_obj_set_style_shadow_width(ui->home_scr_run_label, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes home_scr_run_icon
-    /*ui->home_scr_run_icon = lv_image_create(ui->home_scr_run_container);
+    ui->home_scr_run_icon = lv_image_create(ui->home_scr_run_container);
     lv_obj_set_pos(ui->home_scr_run_icon, 0, 0);
     lv_obj_set_size(ui->home_scr_run_icon, 140, 140);
     lv_obj_add_flag(ui->home_scr_run_icon, LV_OBJ_FLAG_CLICKABLE);
-    lv_image_set_src(ui->home_scr_run_icon, &_play_circle_outline_128dp_EFE8E4_RGB565_140x140);
+    lv_image_set_src(ui->home_scr_run_icon, "A:/play_circle_outline_128dp_EFE8E4-min.png");
     lv_image_set_pivot(ui->home_scr_run_icon, 50,50);
     lv_image_set_rotation(ui->home_scr_run_icon, 0);
 
     //Write style for home_scr_run_icon, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
     lv_obj_set_style_image_recolor_opa(ui->home_scr_run_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
     lv_obj_set_style_image_recolor(ui->home_scr_run_icon, lv_color_hex(0xefe8e4), LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_image_opa(ui->home_scr_run_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);*/
+    lv_obj_set_style_image_opa(ui->home_scr_run_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes home_scr_stats_container
     ui->home_scr_stats_container = lv_obj_create(ui->home_scr);
@@ -209,18 +209,18 @@ void setup_scr_home_scr(lv_ui *ui)
     lv_obj_set_style_shadow_width(ui->home_scr_stats_label, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes home_scr_stats_icon
-    /*ui->home_scr_stats_icon = lv_image_create(ui->home_scr_stats_container);
+    ui->home_scr_stats_icon = lv_image_create(ui->home_scr_stats_container);
     lv_obj_set_pos(ui->home_scr_stats_icon, 0, 0);
     lv_obj_set_size(ui->home_scr_stats_icon, 140, 140);
     lv_obj_add_flag(ui->home_scr_stats_icon, LV_OBJ_FLAG_CLICKABLE);
-    lv_image_set_src(ui->home_scr_stats_icon, &_insights_128dp_EFE8E4_RGB565_140x140);
+    lv_image_set_src(ui->home_scr_stats_icon, "A:/insights_128dp_EFE8E4-min.png");
     lv_image_set_pivot(ui->home_scr_stats_icon, 50,50);
     lv_image_set_rotation(ui->home_scr_stats_icon, 0);
 
     //Write style for home_scr_stats_icon, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
     lv_obj_set_style_image_recolor_opa(ui->home_scr_stats_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
     lv_obj_set_style_image_recolor(ui->home_scr_stats_icon, lv_color_hex(0xefe8e4), LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_image_opa(ui->home_scr_stats_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);*/
+    lv_obj_set_style_image_opa(ui->home_scr_stats_icon, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //The custom code of home_scr.
 
