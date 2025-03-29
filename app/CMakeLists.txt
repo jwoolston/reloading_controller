@@ -17,10 +17,11 @@ target_sources(app PRIVATE
         src/filesystem/filesystem.h
         src/filesystem/lv_fs_zephyr.c
         src/filesystem/lv_fs_zephyr_conf.h
-        src/gui.c
-        src/gui.h
+        src/gui/gui.c
+        src/gui/gui.h
         src/feeders/feeder_subsystem.c
         src/feeders/feeder_subsystem.h
+        #src/gui/splash_screen.c
         src/gui/events_init.c
         src/gui/events_init.h
         src/gui/gui_guider.c
@@ -32,8 +33,7 @@ target_sources(app PRIVATE
         src/gui/widgets_init.c
         src/gui/widgets_init.h
         src/gui/fonts/lv_font_Mostra_Nuova_24.c
-        #src/gui/fonts/lv_font_Mostra_Nuova_32.c
-        #src/gui/images/_AP_Logo_RGB565_480x320.c
+        src/gui/fonts/lv_font_Mostra_Nuova_32.c
         #src/gui/images/images_md5.json
         #src/gui/images/lottie_running_gear_animation.c
 )

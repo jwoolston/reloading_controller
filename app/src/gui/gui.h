@@ -6,8 +6,8 @@
 #define GUI_H
 
 #include "zephyr/drivers/display.h"
-#include "gui/gui_guider.h"
-#include "gui/events_init.h"
+#include "gui_guider.h"
+#include "events_init.h"
 
 int reloading_gui(void);
 

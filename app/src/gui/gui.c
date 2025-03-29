@@ -10,8 +10,19 @@ LOG_MODULE_REGISTER(gui, CONFIG_LOG_DEFAULT_LEVEL);
 
 lv_ui guider_ui;
 
-int reloading_gui(void)
-{
+static void setup_gui() {
+#if LV_USE_THEME_DEFAULT
+    lv_theme_default_init(NULL, lv_palette_main(LV_PALETTE_BLUE), lv_palette_main(LV_PALETTE_RED),
+                          LV_THEME_DEFAULT_DARK,
+                          LV_FONT_DEFAULT);
+#endif
+    lv_obj_t * avatar = lv_image_create(lv_screen_active());
+    //lv_obj_set_size(avatar, 480, 320);
+    lv_image_set_src(avatar, "A:/ap_logo_min.png");
+    lv_obj_center(avatar);
+}
+
+int reloading_gui(void) {
     const struct device* display_dev;
 
     LOG_INF("Getting display");
@@ -22,8 +33,9 @@ int reloading_gui(void)
         return -EINVAL;
     }
 
-    LOG_INF("Display sample for %s", display_dev->name);
+    LOG_INF("Creating UI on display %s", display_dev->name);
 
+    //setup_gui();
     setup_ui(&guider_ui);
     events_init(&guider_ui);
 

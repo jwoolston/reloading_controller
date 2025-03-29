@@ -23,14 +23,15 @@ void setup_scr_splash_scr(lv_ui *ui)
     lv_obj_set_scrollbar_mode(ui->splash_scr, LV_SCROLLBAR_MODE_OFF);
 
     //Write style for splash_scr, Part: LV_PART_MAIN, State: LV_STATE_DEFAULT.
-    lv_obj_set_style_bg_opa(ui->splash_scr, 255, LV_PART_MAIN|LV_STATE_DEFAULT);
-    lv_obj_set_style_bg_color(ui->splash_scr, lv_color_hex(0x4e4e56), LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_opa(ui->splash_scr, 0, LV_PART_MAIN|LV_STATE_DEFAULT);
+    lv_obj_set_style_bg_color(ui->splash_scr, lv_color_hex(0xff0000), LV_PART_MAIN|LV_STATE_DEFAULT); // 0x4e4e56
     lv_obj_set_style_bg_grad_dir(ui->splash_scr, LV_GRAD_DIR_NONE, LV_PART_MAIN|LV_STATE_DEFAULT);
 
     //Write codes splash_scr_splash_logo
     ui->splash_scr_splash_logo = lv_image_create(ui->splash_scr);
     lv_obj_set_pos(ui->splash_scr_splash_logo, 0, 0);
     lv_obj_set_size(ui->splash_scr_splash_logo, 480, 320);
+    lv_obj_align(ui->splash_scr_splash_logo, LV_ALIGN_CENTER, 0, 0);
     lv_obj_add_flag(ui->splash_scr_splash_logo, LV_OBJ_FLAG_CLICKABLE);
     lv_image_set_src(ui->splash_scr_splash_logo, "A:/ap_logo_min.png");
     lv_image_set_pivot(ui->splash_scr_splash_logo, 50,50);

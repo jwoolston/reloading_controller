@@ -14,7 +14,7 @@
 
 #include "feeders/feeder_subsystem.h"
 #include "filesystem/filesystem.h"
-#include "gui.h"
+#include "gui/gui.h"
 
 #include <zephyr/logging/log.h>
 
@@ -46,12 +46,12 @@ int main(void) {
         return ret;
     }
 
-    LOG_INF("Initializing feeder subsystem");
+    /*LOG_INF("Initializing feeder subsystem");
     ret = feeder_subsystem_init();
     if (ret) {
         LOG_ERR("Failed to initialize feeder_subsystem: %d", ret);
         return ret;
-    }
+    }*/
 
     int loop_count = 0;
     while (1) {
